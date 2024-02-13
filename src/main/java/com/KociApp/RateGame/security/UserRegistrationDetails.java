@@ -14,16 +14,19 @@ import java.util.stream.Collectors;
 @Data
 public class UserRegistrationDetails implements UserDetails {
 
-    private String email;
+    private String userName;
     private String password;
     private boolean isEnabled;
     private List<GrantedAuthority> authorities;
 
     public UserRegistrationDetails(User user) {
-        this.email = user.getEmail();
+        this.userName = user.getEmail();
         this.password = user.getPassword();
         this.isEnabled = user.isEnabled();
-        this.authorities = Arrays.stream(user.getRole().split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        this.authorities = Arrays.stream(user.getRole()
+                        .split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -38,7 +41,7 @@ public class UserRegistrationDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return userName;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class UserRegistrationDetails implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

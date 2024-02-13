@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class UserService implements IUserService{
         var newUser = new User();
         newUser.setUsername(request.username());
         newUser.setPassword(passwordEncoder.encode(request.password()));
-        newUser.setRole(request.role());
+        newUser.setRole(request.role());//usunac z requesta role, automatyznie ustwaic na "USER"
         newUser.setEmail(request.email());
         return repository.save(newUser);
     }
@@ -49,5 +50,28 @@ public class UserService implements IUserService{
         var veryficationToken = new VeryficationToken(token, user);
         tokenRepository.save(veryficationToken);
 
+    }
+
+    @Override
+    public String validateToken(String token) {
+
+        VeryficationToken Thetoken = tokenRepository.findByToken(token);
+
+        if(Thetoken == null){
+            return "Invalid token -_-";
+        }
+
+        Calendar calendar = Calendar.getInstance();
+
+        if(Thetoken.getExpirationTime().getTime() < calendar.getTime().getTime()){
+            tokenRepository.delete(Thetoken);
+            return "Token expired ):";
+        }
+
+        User user = Thetoken.getUser();
+        user.setEnabled(true);
+        repository.save(user);
+
+        return "valid";
     }
 }

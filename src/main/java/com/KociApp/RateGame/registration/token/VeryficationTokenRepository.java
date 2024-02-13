@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VeryficationTokenRepository extends JpaRepository<VeryficationToken, Long> {
 
+    VeryficationToken findByToken(String token);
 }

@@ -1,16 +1,15 @@
 package com.KociApp.RateGame.registration;
 
 import com.KociApp.RateGame.event.RegistrationCompleteEvent;
+import com.KociApp.RateGame.registration.token.VeryficationToken;
+import com.KociApp.RateGame.registration.token.VeryficationTokenRepository;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,14 +18,31 @@ public class RegistrationController {
 
     private final UserService userService;
     private final ApplicationEventPublisher publisher;
+    private final VeryficationTokenRepository tokenRepository;
 
     @PostMapping
-    public String registerUser(RegistrationRequest request, final HttpServletRequest httpRequest){
+    public String registerUser(@RequestBody RegistrationRequest request, final HttpServletRequest httpRequest){
 
         User user = userService.userRegistration(request);
         publisher.publishEvent(new RegistrationCompleteEvent(user, applicationURL(httpRequest)));
 
         return "User " + user.getUsername() + " succesfully registered, click on the link in the email we sent you!";
+    }
+
+    @GetMapping("/verifyEmail")
+    public String verifyEmail(@RequestParam("token") String token){
+        VeryficationToken Thetoken = tokenRepository.findByToken(token);
+
+        if(Thetoken.getUser().isEnabled()){
+            return "Your email has been already verified";
+        }
+
+        String verificationResult = userService.validateToken(token);
+
+        if(verificationResult.equals("valid")){
+            return "Your acount has been activated (=";
+        }
+        return "Something went wrong, your account has not been activated );";
     }
 
     private String applicationURL(HttpServletRequest httpRequest) {
