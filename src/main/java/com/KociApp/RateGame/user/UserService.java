@@ -35,7 +35,7 @@ public class UserService implements IUserService{
         var newUser = new User();
         newUser.setUsername(request.username());
         newUser.setPassword(passwordEncoder.encode(request.password()));
-        newUser.setRole(request.role());//usunac z requesta role, automatyznie ustwaic na "USER"
+        newUser.setRole("USER");//usunac z requesta role, automatyznie ustwaic na "USER"
         newUser.setEmail(request.email());
         return repository.save(newUser);
     }
