@@ -2,6 +2,8 @@ package com.KociApp.RateGame.user;
 
 import com.KociApp.RateGame.exception.UserAlreadyExistsException;
 import com.KociApp.RateGame.registration.RegistrationRequest;
+import com.KociApp.RateGame.registration.token.VeryficationToken;
+import com.KociApp.RateGame.registration.token.VeryficationTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -9,11 +11,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 @AllArgsConstructor
+@Service
 public class UserService implements IUserService{
 
     private final UserRepository repository;
+    private final VeryficationTokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     @Override
     public List<User> getUsers() {
@@ -39,5 +42,12 @@ public class UserService implements IUserService{
     @Override
     public Optional<User> findByEmail(String email) {
         return repository.findByEmail(email);
+    }
+
+    public void saveUserToken(User user, String token) {
+
+        var veryficationToken = new VeryficationToken(token, user);
+        tokenRepository.save(veryficationToken);
+
     }
 }

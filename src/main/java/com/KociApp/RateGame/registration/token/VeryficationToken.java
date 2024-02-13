@@ -9,10 +9,10 @@ import lombok.Setter;
 import java.util.Calendar;
 import java.util.Date;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class VeryficationToken {
 
     @Id
