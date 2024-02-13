@@ -1,4 +1,6 @@
 package com.KociApp.RateGame.user;
+import com.KociApp.RateGame.registration.RegistrationRequest;
+
 import java.util.List;
 import java.util.Optional;
 
