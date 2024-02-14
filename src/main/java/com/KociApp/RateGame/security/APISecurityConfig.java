@@ -2,6 +2,7 @@ package com.KociApp.RateGame.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,7 +25,9 @@ public class APISecurityConfig {
                 configurer
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/register/**").permitAll()
-                        .requestMatchers("/users").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers("/users").hasAnyAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/games").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/games").permitAll()
                         .anyRequest().authenticated());
 
 
