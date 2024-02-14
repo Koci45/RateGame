@@ -1,9 +1,6 @@
 package com.KociApp.RateGame.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,16 +16,22 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "username")
     private String username;
 
     @NaturalId(mutable = false)
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
     private String password;
 
+    @Column(name = "role")
     private String role;
 
+    @Column(name = "is_enabled")
     private boolean isEnabled = false;
 }

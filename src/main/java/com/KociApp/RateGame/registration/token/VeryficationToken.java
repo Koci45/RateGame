@@ -17,11 +17,15 @@ public class VeryficationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
+    @Column(name = "token")
     private String token;
 
+    @Column(name = "expiration_time")
     private Date expirationTime;
+
     private static final int tokenExpirationTime = 15;
 
     @OneToOne
