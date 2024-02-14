@@ -28,6 +28,9 @@ public class APISecurityConfig {
                         .requestMatchers("/users").hasAnyAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/games").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/games").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/games/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/reviews").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET,"/reviews").permitAll()
                         .anyRequest().authenticated());
 
 
