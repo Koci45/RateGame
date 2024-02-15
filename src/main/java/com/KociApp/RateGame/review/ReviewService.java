@@ -1,5 +1,6 @@
 package com.KociApp.RateGame.review;
 
+import com.KociApp.RateGame.exception.review.ReviewAlreadyWrittenForThatGameByThatUserException;
 import com.KociApp.RateGame.exception.user.UserNotFoundException;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserService;
@@ -33,6 +34,14 @@ public class ReviewService implements IReviewService{
         review.setUser(user.orElse(null));
 
         review.setCreationDate(new Date());
+
+        //checking if this user already has reviewed this game
+        Optional<Review> reviewDb = repository.findByUserIdAndGameId(user.get().getId(), review.getGame().getId());
+
+        if(reviewDb.isPresent()){
+            throw new ReviewAlreadyWrittenForThatGameByThatUserException("This game-" + review.getGame().getId() +" has been already reviewed by user-" + user.get().getId());
+        }
+
         return repository.save(review);
     }
 
@@ -62,6 +71,11 @@ public class ReviewService implements IReviewService{
     @Override
     public List<Review> findByGameId(int id) {
         return repository.findByGameId(id);
+    }
+
+    @Override
+    public Optional<Review> findByUserIdAndGameId(Long userId, int gameId) {
+        return repository.findByUserIdAndGameId(userId, gameId);
     }
 
 

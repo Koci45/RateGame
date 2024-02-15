@@ -16,4 +16,6 @@ public interface IReviewService {
     List<Review> findByUserId(Long id);
 
     List<Review> findByGameId(int id);
+
+    Optional<Review> findByUserIdAndGameId(Long userId, int gameId);
 }

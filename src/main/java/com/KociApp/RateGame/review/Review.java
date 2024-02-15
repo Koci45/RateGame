@@ -39,4 +39,15 @@ public class Review {
 
     @Column(name = "rating")
     private byte rating;
+
+    // Copy constructor
+    public Review(Review review) {
+        this.id = review.id;
+        this.content = review.content;
+        this.creationDate = review.creationDate;
+        this.user = review.user;
+        this.game = review.game;
+        this.rating = review.rating;
+    }
+
 }

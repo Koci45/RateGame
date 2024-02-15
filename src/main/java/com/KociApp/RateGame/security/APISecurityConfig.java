@@ -33,6 +33,7 @@ public class APISecurityConfig {
                         .requestMatchers(HttpMethod.DELETE,"/reviews/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/reviews").permitAll()
                         .requestMatchers(HttpMethod.GET,"/reviews/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/reviews/findByUserIdAndGameId/**").permitAll()
                         .anyRequest().authenticated());
 
 

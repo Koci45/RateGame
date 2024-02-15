@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -46,5 +47,12 @@ public class ReviewController {
         //Creating separete objects for response to awoid sending crtical user information that is stored inside normal review object
 
         return translator.translate(reviews);
+    }
+
+    @GetMapping("/findByUserIdAndGameId/{userId}/{gameId}")
+    public Optional<ReviewResponse> findByUserIdAndGameId(@PathVariable Long userId, @PathVariable int gameId){
+        Optional<ReviewResponse> reviewResponse = Optional.ofNullable(translator.translate(service.findByUserIdAndGameId(userId, gameId)));
+
+        return  reviewResponse;
     }
 }
