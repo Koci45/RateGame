@@ -25,6 +25,11 @@ public class UserService implements IUserService{
     }
 
     @Override
+    public Optional<User> findById(Long id) {
+        return repository.findById(id);
+    }
+
+    @Override
     public User userRegistration(RegistrationRequest request) {
 
         Optional<User> user = repository.findByEmail(request.email());

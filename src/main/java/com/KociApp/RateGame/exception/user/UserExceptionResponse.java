@@ -1,4 +1,4 @@
-package com.KociApp.RateGame.exception.game;
+package com.KociApp.RateGame.exception.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GameNotFoundResponse {
+public class UserExceptionResponse {
 
     private int status;
 

@@ -1,5 +1,6 @@
 package com.KociApp.RateGame.review;
 
+import com.KociApp.RateGame.exception.user.UserNotFoundException;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserService;
 import lombok.AllArgsConstructor;
@@ -49,6 +50,12 @@ public class ReviewService implements IReviewService{
 
     @Override
     public List<Review> findByUserId(Long id) {
+
+        Optional<User> user = userService.findById(id);
+
+        if(!user.isPresent()){
+            throw new UserNotFoundException("User with id-" + id + " not found");
+        }
         return repository.findByUserId(id);
     }
 

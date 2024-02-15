@@ -25,7 +25,7 @@ public class APISecurityConfig {
                 configurer
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/register/**").permitAll()
-                        .requestMatchers("/users").hasAnyAuthority("ADMIN")
+                        .requestMatchers( "/users").hasAnyAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/games").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/games").permitAll()
                         .requestMatchers(HttpMethod.GET, "/games/**").permitAll()

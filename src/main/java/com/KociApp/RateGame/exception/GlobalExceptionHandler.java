@@ -1,7 +1,5 @@
 package com.KociApp.RateGame.exception;
 
-import com.KociApp.RateGame.exception.game.GameNotFoundException;
-import com.KociApp.RateGame.exception.game.GameNotFoundResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

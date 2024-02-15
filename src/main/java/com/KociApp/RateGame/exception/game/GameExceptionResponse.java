@@ -1,4 +1,4 @@
-package com.KociApp.RateGame.exception.user;
+package com.KociApp.RateGame.exception.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserAlreadyExistsResponse {
+public class GameExceptionResponse {
 
     private int status;
 
