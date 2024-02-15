@@ -1,6 +1,6 @@
 package com.KociApp.RateGame.user;
 
-import com.KociApp.RateGame.exception.UserAlreadyExistsException;
+import com.KociApp.RateGame.exception.user.UserAlreadyExistsException;
 import com.KociApp.RateGame.registration.RegistrationRequest;
 import com.KociApp.RateGame.registration.token.VeryficationToken;
 import com.KociApp.RateGame.registration.token.VeryficationTokenRepository;

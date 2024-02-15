@@ -1,5 +1,6 @@
 package com.KociApp.RateGame.game;
 
+import com.KociApp.RateGame.exception.game.GameNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,14 @@ public class GameService implements IGamesService{
     private final GameRepository repository;
     @Override
     public Optional<Game> findById(int id) {
-        return repository.findById(id);
+
+        Optional<Game> game = repository.findById(id);
+
+        if(!game.isPresent()){
+            throw new GameNotFoundException("game with id-" + id + " not found");
+        }
+
+        return game;
     }
 
     @Override

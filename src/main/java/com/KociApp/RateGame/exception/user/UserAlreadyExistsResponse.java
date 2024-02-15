@@ -1,4 +1,4 @@
-package com.KociApp.RateGame.exception;
+package com.KociApp.RateGame.exception.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
