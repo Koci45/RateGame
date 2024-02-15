@@ -1,5 +1,6 @@
 package com.KociApp.RateGame.game;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ public class GameController {
 
     @GetMapping("/byId/{id}")
     public Optional<Game> getGameById(@PathVariable int id){
+
         return service.findById(id);
     }
 
