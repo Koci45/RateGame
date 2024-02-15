@@ -12,6 +12,7 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService service;
+    private final ReviewToReviewResponseTranslator translator;
 
     @PostMapping
     public Review createReview(@RequestBody Review review){
@@ -21,20 +22,9 @@ public class ReviewController {
     @GetMapping
     public List<ReviewResponse> getReviews(){
         List<Review> reviews = service.getReviews();
-        List<ReviewResponse> reviewResponses = new ArrayList<>();
+        //Creating separete objects for response to awoid sending crtical user information that is stored inside normal review object
 
-        //Creating separete object for response to awoid sending crtical user information that is stored inside normal review object
-        for(Review review : reviews){
-            reviewResponses.add(new ReviewResponse(
-                    review.getId(),
-                    review.getContent(),
-                    review.getCreationDate(),
-                    review.getGame(),
-                    review.getUser().getUsername(),
-                    review.getRating()
-            ));
-        }
-        return reviewResponses;
+        return translator.translate(reviews);
     }
 
     @DeleteMapping("/deleteById/{id}")
@@ -43,12 +33,18 @@ public class ReviewController {
     }
 
     @GetMapping("/findByUserId/{id}")
-    public List<Review> findByUserId(@PathVariable Long id){
-        return service.findByUserId(id);
+    public List<ReviewResponse> findByUserId(@PathVariable Long id){
+        List<Review> reviews = service.findByUserId(id);
+        //Creating separete objects for response to awoid sending crtical user information that is stored inside normal review object
+
+        return translator.translate(reviews);
     }
 
     @GetMapping("/findByGameId/{id}")
-    public List<Review> findByGameId(@PathVariable int id){
-        return service.findByGameId(id);
+    public List<ReviewResponse> findByGameId(@PathVariable int id){
+        List<Review> reviews = service.findByGameId(id);
+        //Creating separete objects for response to awoid sending crtical user information that is stored inside normal review object
+
+        return translator.translate(reviews);
     }
 }
