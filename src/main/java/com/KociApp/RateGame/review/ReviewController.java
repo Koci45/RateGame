@@ -3,6 +3,7 @@ package com.KociApp.RateGame.review;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,8 +19,22 @@ public class ReviewController {
     }
 
     @GetMapping
-    public List<Review> getReviews(){
-        return service.getReviews();
+    public List<ReviewResponse> getReviews(){
+        List<Review> reviews = service.getReviews();
+        List<ReviewResponse> reviewResponses = new ArrayList<>();
+
+        //Creating separete object for response to awoid sending crtical user information that is stored inside normal review object
+        for(Review review : reviews){
+            reviewResponses.add(new ReviewResponse(
+                    review.getId(),
+                    review.getContent(),
+                    review.getCreationDate(),
+                    review.getGame(),
+                    review.getUser().getUsername(),
+                    review.getRating()
+            ));
+        }
+        return reviewResponses;
     }
 
     @DeleteMapping("/deleteById/{id}")
