@@ -40,5 +40,22 @@ public class ReviewService implements IReviewService{
         return repository.findAll();
     }
 
+    @Override
+    public String remove(Long id) {
+        Optional<Review> review = repository.findById(id);
+        repository.delete(review.orElseThrow());
+        return "Review -" + id + " removed";
+    }
+
+    @Override
+    public List<Review> findByUserId(Long id) {
+        return repository.findByUserId(id);
+    }
+
+    @Override
+    public List<Review> findByGameId(int id) {
+        return repository.findByGameId(id);
+    }
+
 
 }

@@ -10,4 +10,10 @@ public interface IReviewService {
     Review save(Review review);
 
     List<Review> getReviews();
+
+    String remove(Long id);
+
+    List<Review> findByUserId(Long id);
+
+    List<Review> findByGameId(int id);
 }
