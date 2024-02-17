@@ -55,4 +55,13 @@ public class ReviewController {
 
         return  reviewResponse;
     }
+
+    @GetMapping("/averageGameRating/{id}")
+     public byte getAverageGameRating (@PathVariable int id){
+        List<Review> reviews = service.findByGameId(id);
+        byte rating = AverageGameRatingCalculator.calculateAverageRating(reviews);
+
+        return rating;
+    }
+
 }

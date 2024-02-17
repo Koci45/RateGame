@@ -42,6 +42,11 @@ public class ReviewService implements IReviewService{
             throw new ReviewAlreadyWrittenForThatGameByThatUserException("This game-" + review.getGame().getId() +" has been already reviewed by user-" + user.get().getId());
         }
 
+        //checking if rating is beetwen 0 and 100
+        if(review.getRating() < 0 || review.getRating() > 100){
+            throw new IllegalArgumentException("Rating must be beeetwen 0 and 100");
+        }
+
         return repository.save(review);
     }
 

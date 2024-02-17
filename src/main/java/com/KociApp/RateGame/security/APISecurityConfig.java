@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -23,18 +24,11 @@ public class APISecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configurer ->
                 configurer
-                        .requestMatchers("/register").permitAll()
-                        .requestMatchers("/register/**").permitAll()
-                        .requestMatchers( "/users").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/users").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/games").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/games").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/games/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/reviews").hasAnyAuthority("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.DELETE,"/reviews/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/reviews").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/reviews/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/reviews/findByUserIdAndGameId/**").permitAll()
-                        .anyRequest().authenticated());
+                        .requestMatchers(HttpMethod.DELETE, "/reviews/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/reviews").hasAnyAuthority("ADMIN", "USER")
+                        .anyRequest().permitAll());
 
 
         http.formLogin(Customizer.withDefaults());
