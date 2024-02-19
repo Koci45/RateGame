@@ -28,6 +28,7 @@ public class APISecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/games").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/reviews/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/reviews").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/reviewLikes").hasAnyAuthority("ADMIN", "USER")
                         .anyRequest().permitAll());
 
 
