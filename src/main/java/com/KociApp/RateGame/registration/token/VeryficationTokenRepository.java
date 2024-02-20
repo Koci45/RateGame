@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface VeryficationTokenRepository extends JpaRepository<VeryficationToken, Long> {
 
     VeryficationToken findByToken(String token);
+
+    void deleteByUserId(long userId);
 }

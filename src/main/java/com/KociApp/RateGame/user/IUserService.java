@@ -15,4 +15,6 @@ public interface IUserService {
 
     String validateToken(String token);
 
+    String deleteUserById(Long id);
+
 }

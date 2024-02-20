@@ -25,6 +25,7 @@ public class APISecurityConfig {
         http.authorizeHttpRequests(configurer ->
                 configurer
                         .requestMatchers("/users").hasAuthority("ADMIN")
+                        .requestMatchers("/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/games").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/reviews/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/reviews").hasAnyAuthority("ADMIN", "USER")

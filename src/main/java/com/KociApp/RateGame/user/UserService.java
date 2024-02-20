@@ -7,6 +7,7 @@ import com.KociApp.RateGame.registration.token.VeryficationTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.List;
@@ -78,5 +79,16 @@ public class UserService implements IUserService{
         repository.save(user);
 
         return "valid";
+    }
+
+    @Override
+    @Transactional
+    public String deleteUserById(Long id) {
+        Optional<User> user = repository.findById(id);
+
+        tokenRepository.deleteByUserId(id);
+        repository.delete(user.orElseThrow());
+
+        return "User with id" + id + " has been removed";
     }
 }
