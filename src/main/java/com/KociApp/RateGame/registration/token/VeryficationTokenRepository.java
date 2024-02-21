@@ -13,4 +13,6 @@ public interface VeryficationTokenRepository extends JpaRepository<VeryficationT
 
     void deleteByUserId(long userId);
 
+    VeryficationToken findByUserId(Long userId);
+
 }

@@ -40,4 +40,9 @@ public class UserController {
     public List<VeryficationToken> getTokens(){
         return userService.getTokens();
     }
+
+    @GetMapping("/tokens/{id}")
+    public VeryficationToken getTokenByUserId(@PathVariable Long id){
+        return userService.getTokenByUserId(id);
+    }
 }

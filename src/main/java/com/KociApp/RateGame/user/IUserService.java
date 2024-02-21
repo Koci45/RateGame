@@ -22,4 +22,6 @@ public interface IUserService {
 
     List<VeryficationToken> getTokens();
 
+    VeryficationToken getTokenByUserId(Long userId);
+
 }

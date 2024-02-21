@@ -100,4 +100,10 @@ public class UserService implements IUserService{
     public List<VeryficationToken> getTokens() {
         return tokenRepository.findAll();
     }
+
+    @Override
+    public VeryficationToken getTokenByUserId(Long userId) {
+        return tokenRepository.findByUserId(userId);
+    }
+
 }
