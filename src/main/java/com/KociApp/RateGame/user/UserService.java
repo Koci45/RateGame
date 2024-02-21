@@ -70,7 +70,6 @@ public class UserService implements IUserService{
         Calendar calendar = Calendar.getInstance();
 
         if(Thetoken.getExpirationTime().getTime() < calendar.getTime().getTime()){
-            tokenRepository.delete(Thetoken);
             return "Token expired ):";
         }
 
@@ -90,5 +89,15 @@ public class UserService implements IUserService{
         repository.delete(user.orElseThrow());
 
         return "User with id" + id + " has been removed";
+    }
+
+    @Override
+    public void deleteToken(VeryficationToken token) {
+        tokenRepository.delete(token);
+    }
+
+    @Override
+    public List<VeryficationToken> getTokens() {
+        return tokenRepository.findAll();
     }
 }

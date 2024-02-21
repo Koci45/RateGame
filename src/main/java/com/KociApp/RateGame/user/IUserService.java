@@ -1,5 +1,6 @@
 package com.KociApp.RateGame.user;
 import com.KociApp.RateGame.registration.RegistrationRequest;
+import com.KociApp.RateGame.registration.token.VeryficationToken;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,5 +17,9 @@ public interface IUserService {
     String validateToken(String token);
 
     String deleteUserById(Long id);
+
+    void deleteToken(VeryficationToken token);
+
+    List<VeryficationToken> getTokens();
 
 }

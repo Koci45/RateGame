@@ -1,6 +1,7 @@
 package com.KociApp.RateGame.user;
 
 import com.KociApp.RateGame.exception.user.UserNotFoundException;
+import com.KociApp.RateGame.registration.token.VeryficationToken;
 import com.KociApp.RateGame.registration.token.VeryficationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -33,5 +34,10 @@ public class UserController {
     @DeleteMapping("/{id}")
     public String deleteUserById(@PathVariable Long id){
         return userService.deleteUserById(id);
+    }
+
+    @GetMapping("/tokens")
+    public List<VeryficationToken> getTokens(){
+        return userService.getTokens();
     }
 }
