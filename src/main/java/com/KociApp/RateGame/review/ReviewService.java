@@ -26,6 +26,8 @@ public class ReviewService implements IReviewService{
 
     @Override
     public Review save(Review review) {
+        //Setting id to zero to ensure its saved as new and wont replace any other
+        review.setId(0L);
         //Assigning the author of review
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
