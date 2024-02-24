@@ -1,5 +1,8 @@
 package com.KociApp.RateGame.review;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,4 +21,6 @@ public interface IReviewService {
     List<Review> findByGameId(int id);
 
     Optional<Review> findByUserIdAndGameId(Long userId, int gameId);
+
+    List<Review> findTopLikedReviewsByGameId(int gameId, Pageable pageable);
 }

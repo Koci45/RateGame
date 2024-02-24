@@ -1,6 +1,7 @@
 package com.KociApp.RateGame.review;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -62,6 +63,14 @@ public class ReviewController {
         byte rating = AverageGameRatingCalculator.calculateAverageRating(reviews);
 
         return rating;
+    }
+
+    @GetMapping("/findByGameIdAndOrderByLikes/{gameId}/{pageNumber}")
+    public List<ReviewResponse> findByGameIdAndOrderByLikes(@PathVariable int gameId, @PathVariable int pageNumber){
+        List<Review> reviews = service.findTopLikedReviewsByGameId(gameId, PageRequest.of(pageNumber, 10));
+        //Creating separete objects for response to awoid sending crtical user information that is stored inside normal review object
+
+        return translator.translate(reviews);
     }
 
 }

@@ -5,6 +5,7 @@ import com.KociApp.RateGame.exception.user.UserNotFoundException;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,11 @@ public class ReviewService implements IReviewService{
     @Override
     public Optional<Review> findByUserIdAndGameId(Long userId, int gameId) {
         return repository.findByUserIdAndGameId(userId, gameId);
+    }
+
+    @Override
+    public List<Review> findTopLikedReviewsByGameId(int gameId, Pageable pageable) {
+        return repository.findTopLikedReviewsByGameId(gameId, pageable);
     }
 
 
