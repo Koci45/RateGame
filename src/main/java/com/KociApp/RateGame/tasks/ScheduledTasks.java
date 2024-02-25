@@ -1,8 +1,12 @@
 package com.KociApp.RateGame.tasks;
 
+import com.KociApp.RateGame.importGames.GameDataImporter;
+import com.KociApp.RateGame.importGames.IGDBGameDataImporter;
+import com.KociApp.RateGame.importGames.TokenGetter;
 import com.KociApp.RateGame.registration.token.VeryficationToken;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserService;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,6 +21,8 @@ import java.util.List;
 public class ScheduledTasks {
 
     private final UserService userService;
+    private final TokenGetter tokenGetter;
+    private final GameDataImporter gameDataImporter;
 
     @Scheduled(fixedRate = 3600000) // Runs every 1 hour|| deletes expired tokens
     public void deleteExpiredTokens() {
@@ -48,5 +54,12 @@ public class ScheduledTasks {
             }
         }
         log.info("Deleted " + counter + " not confirmed in time users");
+    }
+
+    @Scheduled(fixedRate = 3600000) // Runs every 1 hour || imports new games from web
+    public void importNewGames() throws UnirestException {
+
+        String accesToken = tokenGetter.getAccesToken();
+        gameDataImporter.importGamesFromIGDB(accesToken);
     }
 }
