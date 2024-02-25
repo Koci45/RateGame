@@ -1,5 +1,6 @@
 package com.KociApp.RateGame.tasks;
 
+import com.KociApp.RateGame.game.GameRepository;
 import com.KociApp.RateGame.importGames.GameDataImporter;
 import com.KociApp.RateGame.importGames.IGDBGameDataImporter;
 import com.KociApp.RateGame.importGames.TokenGetter;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -22,7 +24,8 @@ public class ScheduledTasks {
 
     private final UserService userService;
     private final TokenGetter tokenGetter;
-    private final GameDataImporter gameDataImporter;
+    private final IGDBGameDataImporter gameDataImporter;
+    private final GameRepository gameRepository;
 
     @Scheduled(fixedRate = 3600000) // Runs every 1 hour|| deletes expired tokens
     public void deleteExpiredTokens() {
@@ -57,9 +60,25 @@ public class ScheduledTasks {
     }
 
     @Scheduled(fixedRate = 3600000) // Runs every 1 hour || imports new games from web
-    public void importNewGames() throws UnirestException {
+    public void importNewGames() throws UnirestException, IOException {
 
         String accesToken = tokenGetter.getAccesToken();
-        gameDataImporter.importGamesFromIGDB(accesToken);
+        //import all genres
+        gameDataImporter.importGenresFromIGDB(accesToken);
+        //import all game platforms
+        gameDataImporter.importPlatformsFromIGDB(accesToken);
+
+        //import all new games to the database in batches until the response is null meaning we got everything up to date
+        while(gameDataImporter.importGamesFromIGDB(accesToken)){
+            try {
+                // Sleep for 1 second (1000 milliseconds)
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                // Handle interrupted exception
+                e.printStackTrace();
+            }
+        }
+
+
     }
 }

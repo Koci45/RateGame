@@ -1,5 +1,6 @@
 package com.KociApp.RateGame.game;
 
+import com.KociApp.RateGame.game.genre.Genre;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,27 +19,24 @@ import java.util.List;
 public class Game {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
     @Column(name = "title")
     private String title;
 
-    @Column(name = "publisher")
-    private String publisher;
-
-    @Column(name = "developer")
-    private String developer;
-
-    @Column(name = "platforms")
-    @ElementCollection(targetClass = Platforms.class)
-    @Enumerated(EnumType.STRING)
-    private List<Platforms> platforms;
+    @Column(name = "cover")
+    private int cover;
 
     @Column(name = "release_date")
     private Date releaseDate;
 
-    @Column(name = "genre")
-    private String genre;
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @Column(name = "genres")
+    private String genres;
+
+    @Column(name = "platforms", length = 800)
+    private String platforms;
 }

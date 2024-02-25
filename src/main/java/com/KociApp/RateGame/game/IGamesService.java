@@ -7,7 +7,7 @@ public interface IGamesService {
 
     Optional<Game> findById(int id);
     Optional<Game> findByTitle(String title);
-    List<Game> findAllByGenre(String genre);
+
     List<Game> findAllByTitleLike(String keyWord);
 
     Game save(Game game);

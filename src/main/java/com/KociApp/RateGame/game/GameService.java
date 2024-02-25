@@ -30,11 +30,6 @@ public class GameService implements IGamesService{
     }
 
     @Override
-    public List<Game> findAllByGenre(String genre) {
-        return repository.findAllByGenre(genre);
-    }
-
-    @Override
     public List<Game> findAllByTitleLike(String keyWord) {
         return repository.findByTitleContaining(keyWord);
     }
