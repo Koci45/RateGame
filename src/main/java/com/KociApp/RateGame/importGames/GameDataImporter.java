@@ -6,6 +6,6 @@ import java.io.IOException;
 
 public interface GameDataImporter {
 
-    public boolean importGamesFromIGDB (String accesToken) throws UnirestException, IOException;
+    public int importGamesFromIGDB (String accesToken) throws UnirestException, IOException;
 
 }

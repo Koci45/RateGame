@@ -68,17 +68,21 @@ public class ScheduledTasks {
         //import all game platforms
         gameDataImporter.importPlatformsFromIGDB(accesToken);
 
-        //import all new games to the database in batches until the response is null meaning we got everything up to date
-        while(gameDataImporter.importGamesFromIGDB(accesToken)){
+        //import all new games to the database in batches until the response is 0 meaning we got everything up to date
+        int gameCounter = 0;
+        int gamesImported;
+        do {
+            gamesImported= gameDataImporter.importGamesFromIGDB(accesToken);
+            gameCounter += gamesImported;
             try {
-                // Sleep for 1 second (1000 milliseconds)
+                // Sleep for 500 milliseconds (0.5 seconds)
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 // Handle interrupted exception
                 e.printStackTrace();
             }
-        }
+        } while (gamesImported > 0);
 
-
+        log.info("Added " + gameCounter + " new games to the databe!");
     }
 }

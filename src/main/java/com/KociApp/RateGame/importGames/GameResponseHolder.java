@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Getter
 public class GameResponseHolder {
-    //this class is used to store json response from web in object
+    //this class is used to store json response from igdb in object
     private int id;
     private int cover;
     private long created_at;
