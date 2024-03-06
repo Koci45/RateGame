@@ -83,6 +83,22 @@ public class ScheduledTasks {
             }
         } while (gamesImported > 0);
 
+        //import all new covers to the database
+        int coverCounter = 0;
+        int coversImported;
+        do{
+            coversImported = gameDataImporter.importCoversFromIGDB(accesToken);
+            coverCounter += coversImported;
+            try {
+                // Sleep for 500 milliseconds (0.5 seconds)
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                // Handle interrupted exception
+                e.printStackTrace();
+            }
+        } while (coversImported > 0);
+
         log.info("Added " + gameCounter + " new games to the databe!");
+        log.info("Added " + coverCounter + " new covers to the databe!");
     }
 }

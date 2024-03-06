@@ -2,6 +2,8 @@ package com.KociApp.RateGame.importGames;
 
 import com.KociApp.RateGame.game.Game;
 import com.KociApp.RateGame.game.GameRepository;
+import com.KociApp.RateGame.game.cover.Cover;
+import com.KociApp.RateGame.game.cover.CoverRepository;
 import com.KociApp.RateGame.game.genre.Genre;
 import com.KociApp.RateGame.game.genre.GenreRepository;
 import com.KociApp.RateGame.game.platform.Platform;
@@ -26,6 +28,7 @@ public class IGDBGameDataImporter implements GameDataImporter{
     private final GenreRepository genreRepository;
     private final PlatformRepository platformRepository;
     private final GameRepository gameRepository;
+    private final CoverRepository coverRepository;
 
     /**
      * This functioons checks the latest creation_time of game that we have in database and then asks
@@ -160,6 +163,28 @@ public class IGDBGameDataImporter implements GameDataImporter{
         game.setPlatforms(platforms);
 
         return game;
+    }
+
+    public int importCoversFromIGDB(String accesToken) throws UnirestException, IOException{
+
+        Integer highestGameId = coverRepository.findHighestGameId();
+        int gameId = highestGameId == null ? 0 : highestGameId;
+
+        HttpResponse<JsonNode> jsonResponse = Unirest.post("https://api.igdb.com/v4/covers")
+                .header("Client-ID", "6idsg519ob3dp93vzqhbgdxfjug2rg")
+                .header("Authorization", "Bearer " + accesToken)
+                .header("Accept", "application/json")
+                .body("fields id, game, url;" +
+                        "limit 500;" +
+                        "where game > " + gameId + ";" +
+                        "sort game asc;")
+                .asJson();
+
+        ObjectMapper mapper = new ObjectMapper();
+        Cover[] covers = mapper.readValue(jsonResponse.getRawBody(), Cover[].class);
+
+        coverRepository.saveAll(Arrays.asList(covers));// saving all to the database
+        return  covers.length;
     }
 
 }

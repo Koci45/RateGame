@@ -68,8 +68,8 @@ public class ReviewController {
     @GetMapping("/findByGameIdAndOrderByLikes/{gameId}/{pageNumber}")
     public List<ReviewResponse> findByGameIdAndOrderByLikes(@PathVariable int gameId, @PathVariable int pageNumber){
         List<Review> reviews = service.findTopLikedReviewsByGameId(gameId, PageRequest.of(pageNumber, 10));
-        //Creating separete objects for response to awoid sending crtical user information that is stored inside normal review object
 
+        //Creating separete objects for response to awoid sending crtical user information that is stored inside normal review object
         return translator.translate(reviews);
     }
 
