@@ -5,8 +5,8 @@ import java.util.Optional;
 
 public interface IGamesService {
 
-    Optional<Game> findById(int id);
-    Optional<Game> findByTitle(String title);
+    Game findById(int id);
+    Game findByTitle(String title);
 
     List<Game> findAllByTitleLike(String keyWord);
 

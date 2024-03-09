@@ -1,13 +1,10 @@
 package com.KociApp.RateGame.user;
 
-import com.KociApp.RateGame.exception.user.UserNotFoundException;
 import com.KociApp.RateGame.registration.token.VeryficationToken;
-import com.KociApp.RateGame.registration.token.VeryficationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,13 +19,9 @@ public class UserController {
     }
 
     @GetMapping("/byId/{id}")
-    public Optional<User> getUser(@PathVariable Long id){
-        Optional<User> user = userService.findById(id);
+    public User getUser(@PathVariable Long id){
 
-        if(!user.isPresent()){
-            throw new UserNotFoundException("User with id-" + id + " Not Found");
-        }
-        return user;
+        return userService.findById(id);
     }
 
     @DeleteMapping("/{id}")

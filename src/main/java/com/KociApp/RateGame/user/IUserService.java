@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface IUserService {
 
     List<User> getUsers();
-    Optional<User> findById(Long id);
+    User findById(Long id);
     User userRegistration(RegistrationRequest request);
-    Optional<User> findByEmail(String email);
+    User findByEmail(String email);
 
     void saveUserToken(User user, String Token);
 

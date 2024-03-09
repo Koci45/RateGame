@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface IReviewService {
 
-    Optional<Review> findById(Long id);
+    Review findById(Long id);
 
     Review save(Review review);
 
@@ -20,7 +20,7 @@ public interface IReviewService {
 
     List<Review> findByGameId(int id);
 
-    Optional<Review> findByUserIdAndGameId(Long userId, int gameId);
+    Review findByUserIdAndGameId(Long userId, int gameId);
 
     List<Review> findTopLikedReviewsByGameId(int gameId, Pageable pageable);
 }

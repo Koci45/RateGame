@@ -1,5 +1,7 @@
 package com.KociApp.RateGame.review.likes;
 
+import com.KociApp.RateGame.review.Review;
+import com.KociApp.RateGame.review.ReviewService;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserService;
 import lombok.AllArgsConstructor;
@@ -15,14 +17,21 @@ public class ReviewLikeService implements IReviewLikeService{
 
     private final ReviewLikeRepository repository;
     private final UserService userService;
+    private final ReviewService reviewService;
 
     @Override
     public int countLikesByReviewId(Long id) {
+
+        Review review = reviewService.findById(id);//just to check if that review exists, if not this method will throw apriopate exception
+
         return repository.countLikesByReviewId(id);
     }
 
     @Override
     public int countDislikesByReviewId(Long id) {
+
+        Review review = reviewService.findById(id);//just to check if that review exists, if not this method will throw apriopate exception
+
         return repository.countDislikesByReviewId(id);
     }
 
@@ -32,13 +41,14 @@ public class ReviewLikeService implements IReviewLikeService{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        Optional<User> user = userService.findByEmail(username);
-        reviewLike.setUser(user.orElse(null));
+        User user = userService.findByEmail(username);
+        reviewLike.setUser(user);
 
-        //deleting old like/dislike id one exists so that one user can leave only one like/dislike and not both or more
-        Optional<ReviewLike> oldReviewLike = repository.findByUserIdAndReviewId(user.get().getId(), reviewLike.getReview().getId());
+        //deleting old like/dislike if one exists so that one user can leave only one like/dislike and not both or more
+        Optional<ReviewLike> oldReviewLike = repository.findByUserIdAndReviewId(user.getId(), reviewLike.getReview().getId());
+
         if(oldReviewLike.isPresent()){
-            repository.delete(oldReviewLike.orElse(null));
+            repository.delete(oldReviewLike.get());
         }
 
         return repository.save(reviewLike);

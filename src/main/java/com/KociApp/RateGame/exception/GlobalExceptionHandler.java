@@ -1,5 +1,7 @@
 package com.KociApp.RateGame.exception;
 
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,5 +26,20 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<GlobalExceptionResponse> handleException(EntityNotFoundException exc){
+
+        GlobalExceptionResponse error = new GlobalExceptionResponse(HttpStatus.NOT_FOUND.value(), exc.getMessage(), System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<GlobalExceptionResponse> handleException(EntityExistsException exc){
+
+        GlobalExceptionResponse error = new GlobalExceptionResponse(HttpStatus.CONFLICT.value(), exc.getMessage(), System.currentTimeMillis());
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
 }
-//MethodArgumentTypeMismatchException

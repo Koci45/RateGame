@@ -1,9 +1,12 @@
 package com.KociApp.RateGame.review;
 
 import com.KociApp.RateGame.exception.review.ReviewAlreadyWrittenForThatGameByThatUserException;
-import com.KociApp.RateGame.exception.user.UserNotFoundException;
+import com.KociApp.RateGame.game.Game;
+import com.KociApp.RateGame.game.GameService;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserService;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -20,29 +23,36 @@ public class ReviewService implements IReviewService{
 
     private final ReviewRepository repository;
     private final UserService userService;
+    private final GameService gameService;
     @Override
-    public Optional<Review> findById(Long id) {
-        return repository.findById(id);
+    public Review findById(Long id) {
+        Optional<Review> review = repository.findById(id);
+
+        if(review.isEmpty()){
+            throw new EntityNotFoundException("Review wit id: " + id.toString() + " not found");
+        }
+
+        return review.get();
     }
 
     @Override
     public Review save(Review review) {
-        //Setting id to zero to ensure its saved as new and wont replace any other
+        //Setting id to zero to ensure its saved as new and won't replace any other
         review.setId(0L);
         //Assigning the author of review
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        Optional<User> user = userService.findByEmail(username);
-        review.setUser(user.orElse(null));
+        User user = userService.findByEmail(username);
+        review.setUser(user);
 
         review.setCreationDate(new Date());
 
         //checking if this user already has reviewed this game
-        Optional<Review> reviewDb = repository.findByUserIdAndGameId(user.get().getId(), review.getGame().getId());
+        Optional<Review> reviewDb = repository.findByUserIdAndGameId(user.getId(), review.getGame().getId());
 
         if(reviewDb.isPresent()){
-            throw new ReviewAlreadyWrittenForThatGameByThatUserException("This game-" + review.getGame().getId() +" has been already reviewed by user-" + user.get().getId());
+            throw new EntityExistsException("This game-" + review.getGame().getId() +" has been already reviewed by user-" + user.getId());
         }
 
         //checking if rating is beetwen 0 and 100
@@ -60,30 +70,38 @@ public class ReviewService implements IReviewService{
 
     @Override
     public String remove(Long id) {
-        Optional<Review> review = repository.findById(id);
-        repository.delete(review.orElseThrow());
+        Review review = findById(id);
+
+        repository.delete(review);
         return "Review -" + id + " removed";
     }
 
     @Override
     public List<Review> findByUserId(Long id) {
 
-        Optional<User> user = userService.findById(id);
+        User user = userService.findById(id);//just to check if that user exists, if not this method will throw aprioprate exception
 
-        if(!user.isPresent()){
-            throw new UserNotFoundException("User with id-" + id + " not found");
-        }
         return repository.findByUserId(id);
     }
 
     @Override
     public List<Review> findByGameId(int id) {
+
+        Game game = gameService.findById(id);//just to check if that game exists, if not this method will throw aprioprate exception
+
         return repository.findByGameId(id);
     }
 
     @Override
-    public Optional<Review> findByUserIdAndGameId(Long userId, int gameId) {
-        return repository.findByUserIdAndGameId(userId, gameId);
+    public Review findByUserIdAndGameId(Long userId, int gameId) {
+
+        Optional<Review> review = repository.findByUserIdAndGameId(userId, gameId);
+
+        if(review.isEmpty()){
+            throw new EntityNotFoundException("A review for game with id: " + gameId + " written by user with id: " + userId.toString() + " doesn't exist");
+        }
+
+        return review.get();
     }
 
     @Override

@@ -1,9 +1,10 @@
 package com.KociApp.RateGame.user;
 
-import com.KociApp.RateGame.exception.user.UserAlreadyExistsException;
 import com.KociApp.RateGame.registration.RegistrationRequest;
 import com.KociApp.RateGame.registration.token.VeryficationToken;
 import com.KociApp.RateGame.registration.token.VeryficationTokenRepository;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,29 +27,41 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return repository.findById(id);
+    public User findById(Long id) {
+        Optional<User> user = repository.findById(id);
+
+        if(user.isEmpty()){
+            throw new EntityNotFoundException("user with id: " + id.toString() + " not found");
+        }
+
+        return user.get();
     }
 
     @Override
     public User userRegistration(RegistrationRequest request) {
-
         Optional<User> user = repository.findByEmail(request.email());
+
         if(user.isPresent()){
-            throw new UserAlreadyExistsException("User with email - " + request.email() + "already exists");
+            throw new EntityExistsException("User with email - " + request.email() + "already exists");
         }
 
         var newUser = new User();
         newUser.setUsername(request.username());
         newUser.setPassword(passwordEncoder.encode(request.password()));
-        newUser.setRole("USER");//usunac z requesta role, automatyznie ustwaic na "USER"
+        newUser.setRole("USER");
         newUser.setEmail(request.email());
         return repository.save(newUser);
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return repository.findByEmail(email);
+    public User findByEmail(String email) {
+        Optional<User> user = repository.findByEmail(email);
+
+        if(user.isEmpty()){
+            throw new EntityNotFoundException("user with email: " + email + " not found");
+        }
+
+        return user.get();
     }
 
     public void saveUserToken(User user, String token) {
@@ -83,10 +96,9 @@ public class UserService implements IUserService{
     @Override
     @Transactional
     public String deleteUserById(Long id) {
-        Optional<User> user = repository.findById(id);
 
         tokenRepository.deleteByUserId(id);
-        repository.delete(user.orElseThrow());
+        repository.delete(findById(id));
 
         return "User with id" + id + " has been removed";
     }

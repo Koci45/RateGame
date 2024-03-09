@@ -51,10 +51,10 @@ public class ReviewController {
     }
 
     @GetMapping("/findByUserIdAndGameId/{userId}/{gameId}")
-    public Optional<ReviewResponse> findByUserIdAndGameId(@PathVariable Long userId, @PathVariable int gameId){
-        Optional<ReviewResponse> reviewResponse = Optional.ofNullable(translator.translate(service.findByUserIdAndGameId(userId, gameId)));
+    public ReviewResponse findByUserIdAndGameId(@PathVariable Long userId, @PathVariable int gameId){
 
-        return  reviewResponse;
+        //Creating separete objects for response to awoid sending crtical user information that is stored inside normal review object
+        return translator.translate(service.findByUserIdAndGameId(userId, gameId));
     }
 
     @GetMapping("/averageGameRating/{id}")

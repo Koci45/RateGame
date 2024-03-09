@@ -11,6 +11,8 @@ import java.util.Optional;
 @NoArgsConstructor
 public class ReviewToReviewResponseTranslator {
 
+    //this class is used for translating reviews from database object format to a format without any critical information like user email being sent to client
+
     public List<ReviewResponse> translate(List<Review> reviews){
         List<ReviewResponse> reviewResponses = new ArrayList<>();
 
@@ -27,9 +29,7 @@ public class ReviewToReviewResponseTranslator {
         return reviewResponses;
     }
 
-    public ReviewResponse translate(Optional<Review> reviewOptional){
-        if (reviewOptional.isPresent()) {
-            Review review = reviewOptional.get();
+    public ReviewResponse translate(Review review){
             return new ReviewResponse(
                     review.getId(),
                     review.getContent(),
@@ -38,9 +38,5 @@ public class ReviewToReviewResponseTranslator {
                     review.getUser().getUsername(),
                     review.getRating()
             );
-        } else {
-            // Return a default ReviewResponse or throw an exception, depending on your requirements
-            return null; // or throw new NoSuchElementException("Review not found");
-        }
     }
 }
