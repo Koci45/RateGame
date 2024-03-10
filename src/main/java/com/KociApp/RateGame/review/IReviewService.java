@@ -10,7 +10,7 @@ public interface IReviewService {
 
     Review findById(Long id);
 
-    Review save(Review review);
+    Review save(ReviewRequest reviewRequest);
 
     List<Review> getReviews();
 

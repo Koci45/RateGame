@@ -1,9 +1,13 @@
 package com.KociApp.RateGame.review;
 
+import com.KociApp.RateGame.exception.NullFieldsException;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.BadAttributeValueExpException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +21,14 @@ public class ReviewController {
     private final ReviewToReviewResponseTranslator translator;
 
     @PostMapping
-    public Review createReview(@RequestBody Review review){
-        return service.save(review);
+    public Review createReview(@RequestBody ReviewRequest reviewRequest) {
+        if(reviewRequest.content().isEmpty()){
+            throw new NullFieldsException("Content cannot be empty");
+        }
+        if(reviewRequest.gameId() == 0){
+            throw new NullFieldsException("GameId cannot be empty");
+        }
+        return service.save(reviewRequest);
     }
 
     @GetMapping

@@ -36,9 +36,18 @@ public class ReviewService implements IReviewService{
     }
 
     @Override
-    public Review save(Review review) {
-        //Setting id to zero to ensure its saved as new and won't replace any other
+    public Review save(ReviewRequest reviewRequest) {
+
+        Review review = new Review();
         review.setId(0L);
+
+        Game game = gameService.findById(reviewRequest.gameId());
+        review.setGame(game);
+
+        review.setContent(reviewRequest.content());
+
+        review.setRating(reviewRequest.rating());
+
         //Assigning the author of review
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
