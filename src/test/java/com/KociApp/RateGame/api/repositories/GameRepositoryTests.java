@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Calendar;
@@ -18,6 +19,7 @@ import java.util.List;
 
 
 @DataJpaTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class GameRepositoryTests {
 
@@ -25,7 +27,7 @@ public class GameRepositoryTests {
     private GameRepository gameRepository;
 
     @Test
-    public void GameRepository_SaveGame_ReturnsSavedGame(){
+    public void GameRepository_SaveGame(){
 
         //Arrange
         Game game = new Game();
@@ -46,7 +48,7 @@ public class GameRepositoryTests {
     }
 
     @Test
-    public void GameRepository_findLatestCreatedAt_ReturnsLatestCreatedAt(){
+    public void GameRepository_findLatestCreatedAt(){
 
         Date currentDate = new Date();
 
@@ -75,7 +77,7 @@ public class GameRepositoryTests {
     }
 
     @Test
-    public void GameRepository_findByTitleContaining_ReturnsByTitleContaining(){
+    public void GameRepository_findByTitleContaining(){
 
         Game gameOne = new Game();
         gameOne.setId(4);

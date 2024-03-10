@@ -11,6 +11,8 @@ public class AverageGameRatingCalculator {
             avg += (int)review.getRating();
         }
 
-        return (byte) (avg/reviews.size());
+        int size = reviews.isEmpty() ? 1 : reviews.size();
+
+        return (byte) (avg/size);
     }
 }
