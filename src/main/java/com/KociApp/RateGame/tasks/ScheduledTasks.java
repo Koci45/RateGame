@@ -6,6 +6,9 @@ import com.KociApp.RateGame.importGames.IGDBGameDataImporter;
 import com.KociApp.RateGame.importGames.TokenGetter;
 import com.KociApp.RateGame.registration.token.VeryficationToken;
 import com.KociApp.RateGame.user.User;
+import com.KociApp.RateGame.user.UserManagement.UserBan;
+import com.KociApp.RateGame.user.UserManagement.UserBanRepository;
+import com.KociApp.RateGame.user.UserRepository;
 import com.KociApp.RateGame.user.UserService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +18,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -26,6 +31,7 @@ public class ScheduledTasks {
     private final TokenGetter tokenGetter;
     private final IGDBGameDataImporter gameDataImporter;
     private final GameRepository gameRepository;
+    private final UserBanRepository userBanRepository;
 
     @Scheduled(fixedRate = 3600000) // Runs every 1 hour|| deletes expired tokens
     public void deleteExpiredTokens() {
@@ -51,7 +57,9 @@ public class ScheduledTasks {
         int counter = 0;
 
         for(User user : users){
-            if(!user.isEnabled() && userService.getTokenByUserId(user.getId()) == null){
+            //delete only if the token is not present, meaning it was expired and deleted, and the user is not banned, beacuse a banned user would also be
+            //set to not enabled and without a token
+            if(!user.isEnabled() && userService.getTokenByUserId(user.getId()) == null && userBanRepository.findByUser(user).isEmpty()){
                 userService.deleteUserById(user.getId());
                 counter++;
             }
@@ -100,5 +108,22 @@ public class ScheduledTasks {
 
         log.info("Added " + gameCounter + " new games to the databe!");
         log.info("Added " + coverCounter + " new covers to the databe!");
+    }
+
+    @Scheduled(fixedRate = 3600000) // Runs every 1 hour|| unbans users after their penalty
+    public void unbanUsers() {
+
+        int counter = 0;
+        List<UserBan> bans = userBanRepository.findAll();
+        Date currDate = new Date();
+
+        for(UserBan ban : bans){
+            if(ban.getDuration().getTime() < currDate.getTime()){
+                userService.unBanUserById(ban.getUser().getId());
+                counter++;
+                userBanRepository.delete(ban);
+            }
+        }
+        log.info("Unbanned " + counter + " User!");
     }
 }

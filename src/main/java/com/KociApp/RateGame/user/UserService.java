@@ -3,6 +3,11 @@ package com.KociApp.RateGame.user;
 import com.KociApp.RateGame.registration.RegistrationRequest;
 import com.KociApp.RateGame.registration.token.VeryficationToken;
 import com.KociApp.RateGame.registration.token.VeryficationTokenRepository;
+import com.KociApp.RateGame.review.ReviewRepository;
+import com.KociApp.RateGame.review.reports.ReviewReportService;
+import com.KociApp.RateGame.review.reports.ReviewReportsRepository;
+import com.KociApp.RateGame.user.UserManagement.UserBan;
+import com.KociApp.RateGame.user.UserManagement.UserBanRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -11,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +27,9 @@ public class UserService implements IUserService{
     private final UserRepository repository;
     private final VeryficationTokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserBanRepository userBanRepository;
+    private final ReviewReportsRepository reviewReportsRepository;
+    private final ReviewRepository reviewRepository;
     @Override
     public List<User> getUsers() {
         return repository.findAll();
@@ -98,6 +107,9 @@ public class UserService implements IUserService{
     public String deleteUserById(Long id) {
 
         tokenRepository.deleteByUserId(id);
+        userBanRepository.deleteAllByUser_Id(id);
+        reviewReportsRepository.deleteAllByUser_Id(id);
+        reviewRepository.deleteAllByUser_Id(id);
         repository.delete(findById(id));
 
         return "User with id" + id + " has been removed";
@@ -116,6 +128,49 @@ public class UserService implements IUserService{
     @Override
     public VeryficationToken getTokenByUserId(Long userId) {
         return tokenRepository.findByUserId(userId);
+    }
+
+    @Override
+    public User banUserById(Long userId, int duration) {
+
+        User user = findById(userId);
+        user.setEnabled(false);
+
+        Optional<UserBan> userBan = userBanRepository.findByUser(user);
+
+        UserBan newUserBan = new UserBan();
+
+        //if this user already is banned the new penalty will add to the old
+        if(userBan.isPresent()){
+            newUserBan = userBan.get();
+            Date currentDate = newUserBan.getDuration();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentDate);
+            calendar.add(Calendar.DAY_OF_YEAR, duration);
+            newUserBan.setDuration(calendar.getTime());
+
+        }else{
+            newUserBan = new UserBan();
+            newUserBan.setUser(user);
+
+            //setting the end date of ban
+            Date currentDate = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentDate);
+            calendar.add(Calendar.DAY_OF_YEAR, duration);
+            newUserBan.setDuration(calendar.getTime());
+        }
+
+        userBanRepository.save(newUserBan);
+
+        return repository.save(user);
+    }
+
+    @Override
+    public void unBanUserById(Long id) {
+        User user = findById(id);
+        user.setEnabled(true);
+        repository.save(user);
     }
 
 }

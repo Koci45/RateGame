@@ -3,6 +3,7 @@ package com.KociApp.RateGame.review.likes;
 import com.KociApp.RateGame.review.Review;
 import com.KociApp.RateGame.review.ReviewService;
 import com.KociApp.RateGame.user.User;
+import com.KociApp.RateGame.user.UserInfo.LoggedInUserProvider;
 import com.KociApp.RateGame.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ public class ReviewLikeService implements IReviewLikeService{
     private final ReviewLikeRepository repository;
     private final UserService userService;
     private final ReviewService reviewService;
+    private final LoggedInUserProvider loggedInUserProvider;
 
     @Override
     public int countLikesByReviewId(Long id) {
@@ -38,10 +40,7 @@ public class ReviewLikeService implements IReviewLikeService{
     @Override
     public ReviewLike createLikeDislike(ReviewLike reviewLike) {
         //Assigning the author of review
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userService.findByEmail(username);
+        User user = loggedInUserProvider.getLoggedUser();
         reviewLike.setUser(user);
 
         //deleting old like/dislike if one exists so that one user can leave only one like/dislike and not both or more

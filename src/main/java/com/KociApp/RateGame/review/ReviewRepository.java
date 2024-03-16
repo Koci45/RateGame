@@ -15,6 +15,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Optional<Review> findByUserIdAndGameId(Long userId, int gameId);
 
+    void deleteAllByUser_Id(Long id);
+
     @Query("SELECT r FROM Review r JOIN ReviewLike rl ON r.id = rl.review.id WHERE r.game.id = :gameId AND rl.likeDislike = true GROUP BY r.id ORDER BY COUNT(rl.id) DESC")
     List<Review> findTopLikedReviewsByGameId(int gameId, Pageable pageable);
 

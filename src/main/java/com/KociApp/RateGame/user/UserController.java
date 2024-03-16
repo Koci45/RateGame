@@ -38,4 +38,9 @@ public class UserController {
     public VeryficationToken getTokenByUserId(@PathVariable Long id){
         return userService.getTokenByUserId(id);
     }
+
+    @GetMapping("/ban/{userId}/{duration}")
+    public User banUserById(@PathVariable Long userId, @PathVariable int duration){
+        return userService.banUserById(userId, duration);
+    }
 }

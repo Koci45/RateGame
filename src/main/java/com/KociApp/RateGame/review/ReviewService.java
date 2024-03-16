@@ -4,6 +4,7 @@ import com.KociApp.RateGame.exception.review.ReviewAlreadyWrittenForThatGameByTh
 import com.KociApp.RateGame.game.Game;
 import com.KociApp.RateGame.game.GameService;
 import com.KociApp.RateGame.user.User;
+import com.KociApp.RateGame.user.UserInfo.LoggedInUserProvider;
 import com.KociApp.RateGame.user.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,6 +25,8 @@ public class ReviewService implements IReviewService{
     private final ReviewRepository repository;
     private final UserService userService;
     private final GameService gameService;
+    private final LoggedInUserProvider loggedInUserProvider;
+
     @Override
     public Review findById(Long id) {
         Optional<Review> review = repository.findById(id);
@@ -49,10 +52,7 @@ public class ReviewService implements IReviewService{
         review.setRating(reviewRequest.rating());
 
         //Assigning the author of review
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userService.findByEmail(username);
+        User user = loggedInUserProvider.getLoggedUser();
         review.setUser(user);
 
         review.setCreationDate(new Date());

@@ -24,4 +24,8 @@ public interface IUserService {
 
     VeryficationToken getTokenByUserId(Long userId);
 
+    User banUserById(Long userId, int duration);
+
+    void unBanUserById(Long id);
+
 }
