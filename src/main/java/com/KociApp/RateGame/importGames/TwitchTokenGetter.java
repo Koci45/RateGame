@@ -5,11 +5,9 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -23,7 +21,7 @@ public class TwitchTokenGetter implements TokenGetter{
     @Override
     public String getAccesToken() throws UnirestException {
 
-        Map<String, String> env = System.getenv(); //getting enviroment vaiables
+        Map<String, String> env = System.getenv(); //getting environment vaiables
 
         HttpResponse<JsonNode> jsonResponse = Unirest.post("https://id.twitch.tv/oauth2/token" + "?client_id=" + env.get("TWITCHID") + "&client_secret=" + env.get("TWITCHSECRET") +
                         "&grant_type=client_credentials").asJson();

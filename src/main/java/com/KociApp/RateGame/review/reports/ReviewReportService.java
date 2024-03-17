@@ -1,6 +1,7 @@
 package com.KociApp.RateGame.review.reports;
 
 import com.KociApp.RateGame.review.Review;
+import com.KociApp.RateGame.review.ReviewRepository;
 import com.KociApp.RateGame.review.ReviewService;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserInfo.LoggedInUserProvider;
@@ -18,7 +19,7 @@ import java.util.Optional;
 public class ReviewReportService implements IReviewReportService{
 
     private final ReviewReportsRepository reviewReportsRepository;
-    private final ReviewService reviewService;
+    private final ReviewRepository reviewRepository;
     private final LoggedInUserProvider loggedInUserProvider;
 
     @Override
@@ -26,8 +27,11 @@ public class ReviewReportService implements IReviewReportService{
 
         ReviewReport reviewReport = new ReviewReport();
 
-        //assinging the review
-        Review review = reviewService.findById(reviewReportRequest.reviewId());
+        //assigning the review
+        Review review = reviewRepository.findById(reviewReportRequest.reviewId()).orElseThrow(
+                () -> new EntityNotFoundException("Review with id-" + reviewReportRequest.reviewId() + " not found")
+        );
+
         reviewReport.setReview(review);
 
         //assinging the reporting user
@@ -79,7 +83,10 @@ public class ReviewReportService implements IReviewReportService{
         List<ReviewReportRaport> raport = new ArrayList<>();
 
         for(Long reviewId : reportedRewievsIds){
-            Review review = reviewService.findById(reviewId);
+
+            Review review = reviewRepository.findById(reviewId).orElseThrow(
+                    () -> new EntityNotFoundException("Review with id-" + reviewId + " not found")
+            );
 
             raport.add(new ReviewReportRaport(reviewId, review.getContent(), countByReview(reviewId), review.getUser().getId()));
         }

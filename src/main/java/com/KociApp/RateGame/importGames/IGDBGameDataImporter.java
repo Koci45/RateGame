@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -31,12 +30,12 @@ public class IGDBGameDataImporter implements GameDataImporter{
     private final CoverRepository coverRepository;
 
     /**
-     * This functioons checks the latest creation_time of game that we have in database and then asks
+     * This functions checks the latest creation_time of game that we have in database and then asks
      * the igdb database if they have any games after that creation_date, if so it downloads them,
-     * creation_date doesnt mean the creation_date of the game itself, rather it means when it was first added to
+     * creation_date doesn't mean the creation_date of the game itself, rather it means when it was first added to
      * igdb database.
-     * there is limit in igdb database for max 500 record per request so this function may need to be called multiple times, (propably only at firs time)
-     * @param accesToken Twitch acces token
+     * there is limit in igdb database for max 500 record per request so this function may need to be called multiple times, (probably only at firs time)
+     * @param accesToken Twitch access token
      * @return number of games imported
      * @throws UnirestException
      * @throws IOException

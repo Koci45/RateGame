@@ -1,15 +1,18 @@
-package com.KociApp.RateGame.review;
+package com.KociApp.RateGame.review.helperClasses;
 
+import com.KociApp.RateGame.review.Review;
+import com.KociApp.RateGame.review.ReviewResponse;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
+@Primary
 @NoArgsConstructor
-public class ReviewToReviewResponseTranslator {
+public class DefaultReviewToReviewResponseTranslatorProvider implements ReviewToReviewResponseTranslatorProvider{
 
     //this class is used for translating reviews from database object format to a format without any critical information like user email being sent to client
 

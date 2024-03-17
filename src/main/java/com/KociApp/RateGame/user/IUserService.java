@@ -1,9 +1,9 @@
 package com.KociApp.RateGame.user;
 import com.KociApp.RateGame.registration.RegistrationRequest;
 import com.KociApp.RateGame.registration.token.VeryficationToken;
+import com.KociApp.RateGame.user.UserManagement.UserBan;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IUserService {
 
@@ -24,7 +24,7 @@ public interface IUserService {
 
     VeryficationToken getTokenByUserId(Long userId);
 
-    User banUserById(Long userId, int duration);
+    UserBan banUserById(Long userId, int duration);
 
     void unBanUserById(Long id);
 

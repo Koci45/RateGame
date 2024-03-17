@@ -7,7 +7,6 @@ import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ public class RegistrationController {
         User user = userService.userRegistration(request);
         publisher.publishEvent(new RegistrationCompleteEvent(user, applicationURL(httpRequest)));
 
-        return "User " + user.getUsername() + " succesfully registered, click on the link in the email we sent you!";
+        return "User " + user.getUsername() + " successfully registered, click on the link in the email we sent you!";
     }
 
     @GetMapping("/verifyEmail")
@@ -40,7 +39,7 @@ public class RegistrationController {
         String verificationResult = userService.validateToken(token);
 
         if(verificationResult.equals("valid")){
-            return "Your acount has been activated (=";
+            return "Your account has been activated (=";
         }
         return "Something went wrong, your account has not been activated );";
     }

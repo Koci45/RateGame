@@ -3,7 +3,7 @@ package com.KociApp.RateGame.other;
 import com.KociApp.RateGame.game.Game;
 import com.KociApp.RateGame.review.Review;
 import com.KociApp.RateGame.review.ReviewResponse;
-import com.KociApp.RateGame.review.ReviewToReviewResponseTranslator;
+import com.KociApp.RateGame.review.helperClasses.DefaultReviewToReviewResponseTranslatorProvider;
 import com.KociApp.RateGame.user.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,10 +17,10 @@ import java.util.List;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReviewToReviewResponseTranslatorTests {
+public class DefaultReviewToReviewResponseTranslatorProviderProviderTests {
 
     @Autowired
-    private ReviewToReviewResponseTranslator translator;
+    private DefaultReviewToReviewResponseTranslatorProvider translator;
 
     @Test
     public void translateSingleReview(){

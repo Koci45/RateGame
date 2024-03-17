@@ -6,11 +6,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface GameRepository extends JpaRepository<Game, Integer> {
-
-    Optional<Game> findByTitle(String title);
 
     @Query("SELECT g FROM Game g WHERE g.title LIKE %:keyword%")
     List<Game> findByTitleContaining(@Param("keyword") String keyword);

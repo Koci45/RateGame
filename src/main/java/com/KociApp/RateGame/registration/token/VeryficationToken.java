@@ -39,12 +39,6 @@ public class VeryficationToken {
         this.expirationTime = this.getTokenExpirationTime();
     }
 
-    public VeryficationToken(String token) {
-        super();
-        this.token = token;
-        this.expirationTime = this.getTokenExpirationTime();
-    }
-
     public Date getTokenExpirationTime() {
 
         Calendar calendar = Calendar.getInstance();

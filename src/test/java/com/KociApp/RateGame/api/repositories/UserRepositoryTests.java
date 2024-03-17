@@ -30,7 +30,7 @@ public class UserRepositoryTests {
         user.setUsername("test");
         user.setRole("TEST");
 
-        User holder = userRepository.save(user);
+        userRepository.save(user);
 
         Optional<User> foundUser = userRepository.findByEmail("test@email.com");
         Assertions.assertThat(foundUser.isPresent()).isEqualTo(true);

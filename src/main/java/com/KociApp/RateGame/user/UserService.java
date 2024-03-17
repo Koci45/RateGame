@@ -4,7 +4,6 @@ import com.KociApp.RateGame.registration.RegistrationRequest;
 import com.KociApp.RateGame.registration.token.VeryficationToken;
 import com.KociApp.RateGame.registration.token.VeryficationTokenRepository;
 import com.KociApp.RateGame.review.ReviewRepository;
-import com.KociApp.RateGame.review.reports.ReviewReportService;
 import com.KociApp.RateGame.review.reports.ReviewReportsRepository;
 import com.KociApp.RateGame.user.UserManagement.UserBan;
 import com.KociApp.RateGame.user.UserManagement.UserBanRepository;
@@ -40,7 +39,7 @@ public class UserService implements IUserService{
         Optional<User> user = repository.findById(id);
 
         if(user.isEmpty()){
-            throw new EntityNotFoundException("user with id: " + id.toString() + " not found");
+            throw new EntityNotFoundException("user with id: " + id + " not found");
         }
 
         return user.get();
@@ -131,14 +130,14 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User banUserById(Long userId, int duration) {
+    public UserBan banUserById(Long userId, int duration) {
 
         User user = findById(userId);
         user.setEnabled(false);
 
         Optional<UserBan> userBan = userBanRepository.findByUser(user);
 
-        UserBan newUserBan = new UserBan();
+        UserBan newUserBan;
 
         //if this user already is banned the new penalty will add to the old
         if(userBan.isPresent()){
@@ -161,9 +160,9 @@ public class UserService implements IUserService{
             newUserBan.setDuration(calendar.getTime());
         }
 
-        userBanRepository.save(newUserBan);
+        repository.save(user);
 
-        return repository.save(user);
+        return userBanRepository.save(newUserBan);
     }
 
     @Override

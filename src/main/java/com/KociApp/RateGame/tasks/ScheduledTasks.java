@@ -1,14 +1,11 @@
 package com.KociApp.RateGame.tasks;
 
-import com.KociApp.RateGame.game.GameRepository;
-import com.KociApp.RateGame.importGames.GameDataImporter;
 import com.KociApp.RateGame.importGames.IGDBGameDataImporter;
 import com.KociApp.RateGame.importGames.TokenGetter;
 import com.KociApp.RateGame.registration.token.VeryficationToken;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserManagement.UserBan;
 import com.KociApp.RateGame.user.UserManagement.UserBanRepository;
-import com.KociApp.RateGame.user.UserRepository;
 import com.KociApp.RateGame.user.UserService;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +17,6 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -30,7 +26,6 @@ public class ScheduledTasks {
     private final UserService userService;
     private final TokenGetter tokenGetter;
     private final IGDBGameDataImporter gameDataImporter;
-    private final GameRepository gameRepository;
     private final UserBanRepository userBanRepository;
 
     @Scheduled(fixedRate = 3600000) // Runs every 1 hour|| deletes expired tokens
@@ -50,14 +45,14 @@ public class ScheduledTasks {
         log.info("Deleted " + counter + " expired tokens");
     }
 
-    @Scheduled(fixedRate = 3600000) // Runs every 1 hour || deletes users that didnt confirm their acciount in time
+    @Scheduled(fixedRate = 3600000) // Runs every 1 hour || deletes users that didn't confirm their account in time
     public void deleteNotConfirmedUsers() {
 
         List<User> users = userService.getUsers();
         int counter = 0;
 
         for(User user : users){
-            //delete only if the token is not present, meaning it was expired and deleted, and the user is not banned, beacuse a banned user would also be
+            //delete only if the token is not present, meaning it was expired and deleted, and the user is not banned, because a banned user would also be
             //set to not enabled and without a token
             if(!user.isEnabled() && userService.getTokenByUserId(user.getId()) == null && userBanRepository.findByUser(user).isEmpty()){
                 userService.deleteUserById(user.getId());

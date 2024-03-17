@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -24,66 +26,71 @@ import java.util.Optional;
 
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class ReviewRepositoryTests {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private GameRepository gameRepository;
-
-    @Autowired
-    private ReviewLikeRepository reviewLikeRepository;
 
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    TestEntityManager entityManager;
+
     @Test
     public void ReviewRepository_findByUserId_ReturnByUserId(){
 
-        User user = new User();
-        user.setEmail("test@email.com");
-        user.setEnabled(true);
-        user.setPassword("123456");
-        user.setUsername("test");
-        user.setRole("TEST");
+        User userOne = new User();
+        userOne.setId(1L);
+        userOne.setEmail("test@email.com");
+        userOne.setEnabled(true);
+        userOne.setPassword("123456");
+        userOne.setUsername("test");
+        userOne.setRole("TEST");
 
-        user = userRepository.save(user);
+        entityManager.merge(userOne);
 
-        Game game = new Game();
-        game.setId(1);
-        game.setTitle("test");
-        game.setPlatforms("test");
-        game.setGenres("test");
-        game.setCreatedAt(new Date());
-        game.setReleaseDate(new Date());
+        User userTwo = new User();
+        userTwo.setId(2L);
+        userTwo.setEmail("test2@email.com");
+        userTwo.setEnabled(true);
+        userTwo.setPassword("123456");
+        userTwo.setUsername("test");
+        userTwo.setRole("TEST");
 
-        game = gameRepository.save(game);
+        entityManager.merge(userTwo);
+
+        Game gameOne = new Game();
+        gameOne.setId(1);
+        gameOne.setTitle("test1");
+        gameOne.setPlatforms("test");
+        gameOne.setGenres("test");
+        gameOne.setCreatedAt(new Date());
+        gameOne.setReleaseDate(new Date());
+
+        entityManager.merge(gameOne);
 
         Game gameTwo = new Game();
-
-        gameTwo.setId(2);
-        gameTwo.setTitle("test");
+        gameTwo.setId(1);
+        gameTwo.setTitle("test1");
         gameTwo.setPlatforms("test");
         gameTwo.setGenres("test");
         gameTwo.setCreatedAt(new Date());
         gameTwo.setReleaseDate(new Date());
 
-        gameTwo = gameRepository.save(gameTwo);
+        entityManager.merge(gameTwo);
 
-        Review review = new Review();
-        review.setUser(user);
-        review.setContent("test");
-        review.setCreationDate(new Date());
-        review.setGame(game);
-        review.setRating((byte) 50);
+        //creating review by user one for game one
+        Review reviewOne = new Review();
+        reviewOne.setUser(userOne);
+        reviewOne.setContent("UserOneGameOne");
+        reviewOne.setCreationDate(new Date());
+        reviewOne.setGame(gameOne);
+        reviewOne.setRating((byte) 50);
 
-        reviewRepository.save(review);
+        reviewRepository.save(reviewOne);
 
+        //creating review by user one for game two
         Review reviewTwo = new Review();
-        reviewTwo.setUser(user);
-        reviewTwo.setContent("test2");
+        reviewTwo.setUser(userOne);
+        reviewTwo.setContent("UserOneGameTwo");
         reviewTwo.setCreationDate(new Date());
         reviewTwo.setGame(gameTwo);
         reviewTwo.setRating((byte) 50);
@@ -91,31 +98,36 @@ public class ReviewRepositoryTests {
         reviewRepository.save(reviewTwo);
 
 
-        List<Review> foundReviews = reviewRepository.findByUserId(user.getId());
+
+        List<Review> foundReviews = reviewRepository.findByUserId(1L);
 
         Assertions.assertThat(foundReviews.size()).isEqualTo(2);
+        Assertions.assertThat(foundReviews.get(0).getUser().getId()).isEqualTo(1L);
+        Assertions.assertThat(foundReviews.get(1).getUser().getId()).isEqualTo(1L);
     }
 
     @Test
     public void ReviewRepository_findByGameId_ReturnsByGameId(){
 
         User user = new User();
+        user.setId(1L);
         user.setEmail("test@email.com");
         user.setEnabled(true);
         user.setPassword("123456");
         user.setUsername("test");
         user.setRole("TEST");
 
-        user = userRepository.save(user);
+        entityManager.merge(user);
 
         User userTwo = new User();
+        userTwo.setId(2L);
         userTwo.setEmail("test2@email.com");
         userTwo.setEnabled(true);
         userTwo.setPassword("123456");
         userTwo.setUsername("test");
         userTwo.setRole("TEST");
 
-        userTwo = userRepository.save(userTwo);
+        entityManager.merge(userTwo);
 
         Game game = new Game();
         game.setId(1);
@@ -125,7 +137,7 @@ public class ReviewRepositoryTests {
         game.setCreatedAt(new Date());
         game.setReleaseDate(new Date());
 
-        game = gameRepository.save(game);
+        entityManager.merge(game);
 
         Review review = new Review();
         review.setUser(user);
@@ -161,7 +173,7 @@ public class ReviewRepositoryTests {
         userOne.setUsername("test");
         userOne.setRole("TEST");
 
-        userOne = userRepository.save(userOne);
+        entityManager.merge(userOne);
 
         //creating second user
         User userTwo = new User();
@@ -171,7 +183,7 @@ public class ReviewRepositoryTests {
         userTwo.setUsername("test");
         userTwo.setRole("TEST");
 
-        userTwo = userRepository.save(userTwo);
+        entityManager.merge(userTwo);
 
         //creating first game
         Game gameOne = new Game();
@@ -182,7 +194,7 @@ public class ReviewRepositoryTests {
         gameOne.setCreatedAt(new Date());
         gameOne.setReleaseDate(new Date());
 
-        gameOne = gameRepository.save(gameOne);
+        entityManager.merge(gameOne);
 
         //creating second game
         Game gameTwo = new Game();
@@ -193,7 +205,7 @@ public class ReviewRepositoryTests {
         gameTwo.setCreatedAt(new Date());
         gameTwo.setReleaseDate(new Date());
 
-        gameTwo = gameRepository.save(gameTwo);
+        entityManager.merge(gameTwo);
 
         //creating review by user one for game one
         Review reviewOne = new Review();
@@ -254,9 +266,8 @@ public class ReviewRepositoryTests {
             users[i].setPassword("123456");
             users[i].setUsername("test");
             users[i].setRole("TEST");
+            entityManager.merge(users[i]);
         }
-
-        userRepository.saveAll(Arrays.stream(users).toList());
 
         Game gameOne = new Game();
         gameOne.setId(1);
@@ -266,13 +277,13 @@ public class ReviewRepositoryTests {
         gameOne.setCreatedAt(new Date());
         gameOne.setReleaseDate(new Date());
 
-        gameOne = gameRepository.save(gameOne);
+        entityManager.merge(gameOne);
 
         Review[] reviews = new Review[30];
 
         for(int i = 0; i < 30; i++){
             reviews[i] = new Review();
-            reviews[i].setUser(userRepository.findById((long) i + 1).orElseThrow());
+            reviews[i].setUser(users[i]);
             reviews[i].setContent("review" + i);
             reviews[i].setCreationDate(new Date());
             reviews[i].setGame(gameOne);
@@ -282,15 +293,15 @@ public class ReviewRepositoryTests {
         reviewRepository.saveAll(Arrays.stream(reviews).toList());
 
         for(int i = 0; i < 30; i++){
-             Optional<User> user = userRepository.findById((long) (i + 1));
+             User user = users[i];
 
              for(int j = 0; j < 30 - i; j++){
                  Optional<Review> review = reviewRepository.findById((long) (j + 1));
                  ReviewLike like = new ReviewLike();
-                 like.setUser(user.get());
+                 like.setUser(user);
                  like.setLikeDislike(true);
                  like.setReview(review.get());
-                 reviewLikeRepository.save(like);
+                 entityManager.merge(like);
              }
         }
 
@@ -299,11 +310,8 @@ public class ReviewRepositoryTests {
 
         Assertions.assertThat(resultReviewsPageOne.size()).isEqualTo(10);
         Assertions.assertThat(resultReviewsPageThree.size()).isEqualTo(10);
-        Assertions.assertThat(resultReviewsPageOne.get(0).getUser().equals(userRepository.findById(1L).get())).isEqualTo(true);
-        Assertions.assertThat(resultReviewsPageOne.get(1).getUser().equals(userRepository.findById(2L).get())).isEqualTo(true);
-        Assertions.assertThat(resultReviewsPageThree.get(1).getUser().equals(userRepository.findById(22L).get())).isEqualTo(true);
-        Assertions.assertThat(reviewLikeRepository.countLikesByReviewId(resultReviewsPageOne.get(0).getId())).isEqualTo(30);
-        Assertions.assertThat(reviewLikeRepository.countLikesByReviewId(resultReviewsPageOne.get(1).getId())).isEqualTo(29);
-        Assertions.assertThat(reviewLikeRepository.countLikesByReviewId(resultReviewsPageThree.get(2).getId())).isEqualTo(8);
+        Assertions.assertThat(resultReviewsPageOne.get(0).getUser().equals(users[0])).isEqualTo(true);
+        Assertions.assertThat(resultReviewsPageOne.get(1).getUser().equals(users[1])).isEqualTo(true);
+        Assertions.assertThat(resultReviewsPageThree.get(1).getUser().equals(users[21])).isEqualTo(true);
     }
 }

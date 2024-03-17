@@ -1,6 +1,5 @@
 package com.KociApp.RateGame.game;
 
-import com.KociApp.RateGame.game.cover.CoverRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,17 +18,6 @@ public class GameService implements IGamesService{
 
         if(game.isEmpty()){
             throw new EntityNotFoundException("game with id-" + id + " not found");
-        }
-
-        return game.get();
-    }
-
-    @Override
-    public Game findByTitle(String title) {
-        Optional<Game> game = repository.findByTitle(title);
-
-        if(game.isEmpty()){
-            throw new EntityNotFoundException("game with title-" + title + " not found");
         }
 
         return game.get();

@@ -1,17 +1,13 @@
 package com.KociApp.RateGame.review;
 
-import com.KociApp.RateGame.exception.review.ReviewAlreadyWrittenForThatGameByThatUserException;
 import com.KociApp.RateGame.game.Game;
-import com.KociApp.RateGame.game.GameService;
+import com.KociApp.RateGame.game.GameRepository;
 import com.KociApp.RateGame.user.User;
 import com.KociApp.RateGame.user.UserInfo.LoggedInUserProvider;
-import com.KociApp.RateGame.user.UserService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,8 +19,7 @@ import java.util.Optional;
 public class ReviewService implements IReviewService{
 
     private final ReviewRepository repository;
-    private final UserService userService;
-    private final GameService gameService;
+    private final GameRepository gameRepository;
     private final LoggedInUserProvider loggedInUserProvider;
 
     @Override
@@ -32,7 +27,7 @@ public class ReviewService implements IReviewService{
         Optional<Review> review = repository.findById(id);
 
         if(review.isEmpty()){
-            throw new EntityNotFoundException("Review wit id: " + id.toString() + " not found");
+            throw new EntityNotFoundException("Review wit id: " + id + " not found");
         }
 
         return review.get();
@@ -44,8 +39,12 @@ public class ReviewService implements IReviewService{
         Review review = new Review();
         review.setId(0L);
 
-        Game game = gameService.findById(reviewRequest.gameId());
-        review.setGame(game);
+        Optional<Game> game = gameRepository.findById(reviewRequest.gameId());
+
+        if(game.isEmpty()){
+            throw new EntityNotFoundException("Game with id" + reviewRequest.gameId() + "not found");
+        }
+        review.setGame(game.get());
 
         review.setContent(reviewRequest.content());
 
@@ -64,9 +63,9 @@ public class ReviewService implements IReviewService{
             throw new EntityExistsException("This game-" + review.getGame().getId() +" has been already reviewed by user-" + user.getId());
         }
 
-        //checking if rating is beetwen 0 and 100
+        //checking if rating is between 0 and 100
         if(review.getRating() < 0 || review.getRating() > 100){
-            throw new IllegalArgumentException("Rating must be beeetwen 0 and 100");
+            throw new IllegalArgumentException("Rating must be between 0 and 100");
         }
 
         return repository.save(review);
@@ -88,15 +87,11 @@ public class ReviewService implements IReviewService{
     @Override
     public List<Review> findByUserId(Long id) {
 
-        User user = userService.findById(id);//just to check if that user exists, if not this method will throw aprioprate exception
-
         return repository.findByUserId(id);
     }
 
     @Override
     public List<Review> findByGameId(int id) {
-
-        Game game = gameService.findById(id);//just to check if that game exists, if not this method will throw aprioprate exception
 
         return repository.findByGameId(id);
     }
