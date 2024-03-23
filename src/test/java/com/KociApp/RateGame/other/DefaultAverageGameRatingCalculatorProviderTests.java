@@ -2,7 +2,7 @@ package com.KociApp.RateGame.other;
 
 import com.KociApp.RateGame.review.helperClasses.DefaultAverageGameRatingCalculatorProvider;
 import com.KociApp.RateGame.review.Review;
-import org.junit.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -53,9 +53,8 @@ public class DefaultAverageGameRatingCalculatorProviderTests {
 
         byte resultThree = averageGameRatingCalculatorProvider.calculateAverageRating(emptyList);
 
-        Assert.assertEquals(resultOne, 50);
-        Assert.assertEquals(resultTwo, 0);
-        Assert.assertEquals(resultThree, 0);
-
+        Assertions.assertThat(resultOne).isEqualTo((byte)50);
+        Assertions.assertThat(resultTwo).isEqualTo((byte)0);
+        Assertions.assertThat(resultThree).isEqualTo((byte)0);
     }
 }

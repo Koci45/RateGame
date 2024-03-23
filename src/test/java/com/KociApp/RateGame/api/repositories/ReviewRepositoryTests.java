@@ -1,23 +1,17 @@
 package com.KociApp.RateGame.api.repositories;
 
 import com.KociApp.RateGame.game.Game;
-import com.KociApp.RateGame.game.GameRepository;
 import com.KociApp.RateGame.review.Review;
 import com.KociApp.RateGame.review.ReviewRepository;
 import com.KociApp.RateGame.review.likes.ReviewLike;
-import com.KociApp.RateGame.review.likes.ReviewLikeRepository;
 import com.KociApp.RateGame.user.User;
-import com.KociApp.RateGame.user.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.Date;

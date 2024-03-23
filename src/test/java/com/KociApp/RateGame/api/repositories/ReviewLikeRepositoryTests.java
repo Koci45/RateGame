@@ -1,24 +1,20 @@
 package com.KociApp.RateGame.api.repositories;
 
 import com.KociApp.RateGame.game.Game;
-import com.KociApp.RateGame.game.GameRepository;
 import com.KociApp.RateGame.review.Review;
-import com.KociApp.RateGame.review.ReviewRepository;
 import com.KociApp.RateGame.review.likes.ReviewLike;
 import com.KociApp.RateGame.review.likes.ReviewLikeRepository;
 import com.KociApp.RateGame.user.User;
-import com.KociApp.RateGame.user.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Optional;
 
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -26,16 +22,10 @@ import java.util.Optional;
 public class ReviewLikeRepositoryTests {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private GameRepository gameRepository;
-
-    @Autowired
     private ReviewLikeRepository reviewLikeRepository;
 
     @Autowired
-    private ReviewRepository reviewRepository;
+    TestEntityManager entityManager;
 
     @Test
     public void ReviewLikeRepository_countLikesByReviewId(){
@@ -49,9 +39,9 @@ public class ReviewLikeRepositoryTests {
             users[i].setPassword("123456");
             users[i].setUsername("test");
             users[i].setRole("TEST");
+            entityManager.merge(users[i]);
         }
 
-        userRepository.saveAll(Arrays.stream(users).toList());
 
         Game gameOne = new Game();
         gameOne.setId(1);
@@ -61,39 +51,37 @@ public class ReviewLikeRepositoryTests {
         gameOne.setCreatedAt(new Date());
         gameOne.setReleaseDate(new Date());
 
-        gameOne = gameRepository.save(gameOne);
+        entityManager.merge(gameOne);
 
         Review[] reviews = new Review[30];
 
         for(int i = 0; i < 30; i++){
             reviews[i] = new Review();
-            reviews[i].setUser(userRepository.findById((long) i + 1).orElseThrow());
+            reviews[i].setUser(users[i]);
             reviews[i].setContent("review" + i);
             reviews[i].setCreationDate(new Date());
             reviews[i].setGame(gameOne);
             reviews[i].setRating((byte) 50);
+            entityManager.merge(reviews[i]);
         }
 
-        reviewRepository.saveAll(Arrays.stream(reviews).toList());
 
         for(int i = 0; i < 30; i++){
-            Optional<User> user = userRepository.findById((long) (i + 1));
+            User user = users[i];
 
             for(int j = 0; j < 30 - i; j++){
-                Optional<Review> review = reviewRepository.findById((long) (j + 1));
+                Review review = reviews[i];
                 ReviewLike like = new ReviewLike();
-                like.setUser(user.get());
+                like.setUser(user);
                 like.setLikeDislike(true);
-                like.setReview(review.get());
+                like.setReview(review);
                 reviewLikeRepository.save(like);
             }
         }
 
-        Assertions.assertThat(reviewLikeRepository.countLikesByReviewId(reviewRepository.findById(1L).get().getId())).isEqualTo(30);
-        Assertions.assertThat(reviewLikeRepository.countLikesByReviewId(reviewRepository.findById(2L).get().getId())).isEqualTo(29);
-        Assertions.assertThat(reviewLikeRepository.countLikesByReviewId(reviewRepository.findById(30L).get().getId())).isEqualTo(1);
-
-
+        Assertions.assertThat(reviewLikeRepository.countLikesByReviewId(reviews[0].getId())).isEqualTo(30);
+        Assertions.assertThat(reviewLikeRepository.countLikesByReviewId(reviews[1].getId())).isEqualTo(29);
+        Assertions.assertThat(reviewLikeRepository.countLikesByReviewId(reviews[29].getId())).isEqualTo(1);
     }
 
     @Test
@@ -108,9 +96,9 @@ public class ReviewLikeRepositoryTests {
             users[i].setPassword("123456");
             users[i].setUsername("test");
             users[i].setRole("TEST");
+            entityManager.merge(users[i]);
         }
 
-        userRepository.saveAll(Arrays.stream(users).toList());
 
         Game gameOne = new Game();
         gameOne.setId(1);
@@ -120,41 +108,37 @@ public class ReviewLikeRepositoryTests {
         gameOne.setCreatedAt(new Date());
         gameOne.setReleaseDate(new Date());
 
-        gameOne = gameRepository.save(gameOne);
+        entityManager.merge(gameOne);
 
         Review[] reviews = new Review[30];
 
         for(int i = 0; i < 30; i++){
             reviews[i] = new Review();
-            reviews[i].setUser(userRepository.findById((long) i + 1).orElseThrow());
+            reviews[i].setUser(users[i]);
             reviews[i].setContent("review" + i);
             reviews[i].setCreationDate(new Date());
             reviews[i].setGame(gameOne);
             reviews[i].setRating((byte) 50);
+            entityManager.merge(reviews[i]);
         }
 
-        reviewRepository.saveAll(Arrays.stream(reviews).toList());
 
         for(int i = 0; i < 30; i++){
-            Optional<User> user = userRepository.findById((long) (i + 1));
+            User user = users[i];
 
             for(int j = 0; j < 30 - i; j++){
-                Optional<Review> review = reviewRepository.findById((long) (j + 1));
+                Review review = reviews[i];
                 ReviewLike like = new ReviewLike();
-                like.setUser(user.get());
+                like.setUser(user);
                 like.setLikeDislike(false);
-                like.setReview(review.get());
+                like.setReview(review);
                 reviewLikeRepository.save(like);
             }
         }
 
-        Assertions.assertThat(reviewLikeRepository.countDislikesByReviewId(reviewRepository.findById(1L).get().getId())).isEqualTo(30);
-        Assertions.assertThat(reviewLikeRepository.countDislikesByReviewId(reviewRepository.findById(2L).get().getId())).isEqualTo(29);
-        Assertions.assertThat(reviewLikeRepository.countDislikesByReviewId(reviewRepository.findById(30L).get().getId())).isEqualTo(1);
-
-        userRepository.deleteAll();
-        reviewRepository.deleteAll();
-        reviewLikeRepository.deleteAll();
+        Assertions.assertThat(reviewLikeRepository.countDislikesByReviewId(reviews[0].getId())).isEqualTo(30);
+        Assertions.assertThat(reviewLikeRepository.countDislikesByReviewId(reviews[1].getId())).isEqualTo(29);
+        Assertions.assertThat(reviewLikeRepository.countDislikesByReviewId(reviews[29].getId())).isEqualTo(1);
     }
 
     @Test
@@ -169,9 +153,8 @@ public class ReviewLikeRepositoryTests {
             users[i].setPassword("123456");
             users[i].setUsername("test");
             users[i].setRole("TEST");
+            entityManager.merge(users[i]);
         }
-
-        userRepository.saveAll(Arrays.stream(users).toList());
 
         Game gameOne = new Game();
         gameOne.setId(1);
@@ -181,41 +164,39 @@ public class ReviewLikeRepositoryTests {
         gameOne.setCreatedAt(new Date());
         gameOne.setReleaseDate(new Date());
 
-        gameOne = gameRepository.save(gameOne);
+        entityManager.merge(gameOne);
 
         Review[] reviews = new Review[5];
 
         for(int i = 0; i < 5; i++){
             reviews[i] = new Review();
-            reviews[i].setUser(userRepository.findById((long) i + 1).orElseThrow());
+            reviews[i].setUser(users[i]);
             reviews[i].setContent("review" + i);
             reviews[i].setCreationDate(new Date());
             reviews[i].setGame(gameOne);
             reviews[i].setRating((byte) 50);
+            entityManager.merge(reviews[i]);
         }
 
-        reviewRepository.saveAll(Arrays.stream(reviews).toList());
-
         for(int i = 0; i < 5; i++){
-            Optional<User> user = userRepository.findById((long) (i + 1));
+            User user = users[i];
 
-            Optional<Review> review = reviewRepository.findById((long) (i + 1));
+            Review review = reviews[i];
             ReviewLike like = new ReviewLike();
-            like.setUser(user.get());
+            like.setUser(user);
             like.setLikeDislike(true);
-            like.setReview(review.get());
+            like.setReview(review);
             reviewLikeRepository.save(like);
         }
 
         Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(1L,1L).isPresent()).isEqualTo(true);
         Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(1L,2L).isPresent()).isEqualTo(false);
-        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(1L,1L).get().getUser()).isEqualTo(userRepository.findById(1L).get());
-        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(1L,1L).get().getReview()).isEqualTo(reviewRepository.findById(1L).get());
-        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(3L,3L).get().getUser()).isEqualTo(userRepository.findById(3L).get());
-        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(3L,3L).get().getReview()).isEqualTo(reviewRepository.findById(3L).get());
-        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(5L,5L).get().getUser()).isEqualTo(userRepository.findById(5L).get());
-        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(5L,5L).get().getReview()).isEqualTo(reviewRepository.findById(5L).get());
+        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(1L,1L).get().getUser()).isEqualTo(users[0]);
+        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(1L,1L).get().getReview()).isEqualTo(reviews[0]);
+        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(3L,3L).get().getUser()).isEqualTo(users[2]);
+        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(3L,3L).get().getReview()).isEqualTo(reviews[2]);
+        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(5L,5L).get().getUser()).isEqualTo(users[4]);
+        Assertions.assertThat(reviewLikeRepository.findByUserIdAndReviewId(5L,5L).get().getReview()).isEqualTo(reviews[4]);
     }
-
 
 }
