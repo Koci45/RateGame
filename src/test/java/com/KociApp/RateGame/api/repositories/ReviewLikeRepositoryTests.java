@@ -17,7 +17,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import java.util.Date;
 
 @DataJpaTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class ReviewLikeRepositoryTests {
 
@@ -28,6 +27,7 @@ public class ReviewLikeRepositoryTests {
     TestEntityManager entityManager;
 
     @Test
+    @DirtiesContext
     public void ReviewLikeRepository_countLikesByReviewId(){
 
         User[] users = new User[30];
@@ -85,6 +85,7 @@ public class ReviewLikeRepositoryTests {
     }
 
     @Test
+    @DirtiesContext
     public void ReviewLikeRepository_countDislikesByReviewId(){
 
         User[] users = new User[30];
