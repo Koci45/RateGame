@@ -56,7 +56,7 @@ public class ReviewReportService implements IReviewReportService{
         Optional<ReviewReport> reviewReport = reviewReportsRepository.findById(id);
 
         if(reviewReport.isEmpty()){
-            throw new EntityNotFoundException("ReviewReport woth id- " + id + " not found");
+            throw new EntityNotFoundException("ReviewReport with id- " + id + " not found");
         }
 
         return reviewReport.get();

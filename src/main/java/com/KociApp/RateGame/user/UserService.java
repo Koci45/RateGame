@@ -50,7 +50,7 @@ public class UserService implements IUserService{
         Optional<User> user = repository.findByEmail(request.email());
 
         if(user.isPresent()){
-            throw new EntityExistsException("User with email - " + request.email() + "already exists");
+            throw new EntityExistsException("User with email - " + request.email() + " already exists");
         }
 
         var newUser = new User();
@@ -111,7 +111,7 @@ public class UserService implements IUserService{
         reviewRepository.deleteAllByUser_Id(id);
         repository.delete(findById(id));
 
-        return "User with id" + id + " has been removed";
+        return "User with id " + id + " has been removed";
     }
 
     @Override
