@@ -51,6 +51,7 @@ public class ReviewLikeServiceTests {
         Assertions.assertThat(reviewLikeCaptor.getValue().getUser()).isEqualTo(user);
         Assertions.assertThat(reviewLikeCaptor.getValue().getReview()).isEqualTo(review);
         Assertions.assertThat(reviewLikeCaptor.getValue().isLikeDislike()).isTrue();
+        Assertions.assertThat(reviewLikeCaptor.getValue().getId()).isEqualTo(0L);
     }
 
     @Test
@@ -74,5 +75,6 @@ public class ReviewLikeServiceTests {
         Assertions.assertThat(reviewLikeCaptor.getValue().getUser()).isEqualTo(user);
         Assertions.assertThat(reviewLikeCaptor.getValue().getReview()).isEqualTo(review);
         Assertions.assertThat(reviewLikeCaptor.getValue().isLikeDislike()).isTrue();
+        Assertions.assertThat(reviewLikeCaptor.getValue().getId()).isEqualTo(0L);
     }
 }

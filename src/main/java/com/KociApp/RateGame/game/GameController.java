@@ -2,6 +2,7 @@ package com.KociApp.RateGame.game;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class GameController {
     private final GameService service;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Game createGame(@RequestBody Game game){
         return service.save(game);
     }

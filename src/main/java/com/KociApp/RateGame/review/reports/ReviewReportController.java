@@ -1,6 +1,7 @@
 package com.KociApp.RateGame.review.reports;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,14 +23,10 @@ public class ReviewReportController {
         return reviewReportService.findById(id);
     }
 
-    @PostMapping("/report")
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public ReviewReport createReport(@RequestBody ReviewReportRequest reviewReportRequest){
         return reviewReportService.save(reviewReportRequest);
-    }
-
-    @GetMapping("/test")
-    public List<Long> test(){
-        return reviewReportService.findUniqueReviewIds();
     }
 
     @GetMapping("/raport")

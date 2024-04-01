@@ -8,6 +8,7 @@ import com.KociApp.RateGame.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class RegistrationController {
     private final VeryficationTokenRepository tokenRepository;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public String registerUser(@RequestBody RegistrationRequest request, final HttpServletRequest httpRequest){
 
         User user = userService.userRegistration(request);

@@ -1,6 +1,7 @@
 package com.KociApp.RateGame.review.likes;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -21,8 +22,8 @@ public class ReviewLikeController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ReviewLike createLikeDislike(@RequestBody ReviewLike reviewLike){
-        reviewLike.setId(0L);
         return service.createLikeDislike(reviewLike);
     }
 }

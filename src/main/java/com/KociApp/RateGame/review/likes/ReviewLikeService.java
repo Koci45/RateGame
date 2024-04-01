@@ -31,6 +31,7 @@ public class ReviewLikeService implements IReviewLikeService{
         //Assigning the author of review
         User user = loggedInUserProvider.getLoggedUser();
         reviewLike.setUser(user);
+        reviewLike.setId(0L);
 
         //deleting old like/dislike if one exists so that one user can leave only one like/dislike and not both or more
         Optional<ReviewLike> oldReviewLike = repository.findByUserIdAndReviewId(user.getId(), reviewLike.getReview().getId());

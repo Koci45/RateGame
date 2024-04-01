@@ -4,8 +4,10 @@ import com.KociApp.RateGame.exception.NullFieldsException;
 import com.KociApp.RateGame.review.helperClasses.AverageGameRatingCalculatorProvider;
 import com.KociApp.RateGame.review.helperClasses.DefaultAverageGameRatingCalculatorProvider;
 import com.KociApp.RateGame.review.helperClasses.ReviewToReviewResponseTranslatorProvider;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,9 @@ public class ReviewController {
     private final AverageGameRatingCalculatorProvider calculator;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Review createReview(@RequestBody ReviewRequest reviewRequest) {
-        if(reviewRequest.content().isEmpty()){
+        if(reviewRequest.content() == null || reviewRequest.content().isEmpty()){
             throw new NullFieldsException("Content cannot be empty");
         }
         if(reviewRequest.gameId() == 0){
