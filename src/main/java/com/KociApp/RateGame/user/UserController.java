@@ -2,6 +2,7 @@ package com.KociApp.RateGame.user;
 
 import com.KociApp.RateGame.registration.token.VeryficationToken;
 import com.KociApp.RateGame.user.UserManagement.UserBan;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,8 +41,11 @@ public class UserController {
         return userService.getTokenByUserId(id);
     }
 
-    @GetMapping("/ban/{userId}/{duration}")
-    public UserBan banUserById(@PathVariable Long userId, @PathVariable int duration){
+    @PostMapping("/ban")
+    public UserBan banUserById(
+            @RequestParam(required = true) Long userId,
+            @RequestParam(required = true) int duration
+    ){
         return userService.banUserById(userId, duration);
     }
 }
