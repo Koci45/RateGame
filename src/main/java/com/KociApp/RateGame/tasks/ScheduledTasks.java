@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -65,6 +66,8 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 3600000) // Runs every 1 hour || imports new games from web
     public void importNewGames() throws UnirestException, IOException {
 
+        Map<String, String> env = System.getenv();
+
         String accesToken = tokenGetter.getAccesToken();
         //import all genres
         gameDataImporter.importGenresFromIGDB(accesToken);
@@ -84,7 +87,7 @@ public class ScheduledTasks {
                 // Handle interrupted exception
                 e.printStackTrace();
             }
-        } while (gamesImported > 0);
+        } while (gamesImported > 0 && !env.get("LIMIT_GAME_IMPORT_TESTING").equals("TRUE"));
 
         //import all new covers to the database
         int coverCounter = 0;
@@ -99,7 +102,7 @@ public class ScheduledTasks {
                 // Handle interrupted exception
                 e.printStackTrace();
             }
-        } while (coversImported > 0);
+        } while (coversImported > 0 && !env.get("LIMIT_GAME_IMPORT_TESTING").equals("TRUE"));
 
         log.info("Added " + gameCounter + " new games to the databe!");
         log.info("Added " + coverCounter + " new covers to the databe!");
