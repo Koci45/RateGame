@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysqldb
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+      - MYSQL_DATABASE=rategame
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  rategame:
+    image: koci455/rategame:rategame
+    container_name: rategame
+    ports:
+      - "8070:8080"
+    environment:
+      - DATA_BASE_PASSWORD=example
+      - DATA_BASE_USERNAME=root
+      - SMTP_PASSWORD="iltc gsff asqa tjhv"
+      - TWITCHID=6idsg519ob3dp93vzqhbgdxfjug2rg
+      - TWITCHSECRET=kf4pqs47efckszl3ddn1smhh8tbp66
+      - LIMIT_GAME_IMPORT_TESTING=TRUE
+      - MYSQL_HOST=mysqldb
+      - MYSQL_PORT=3306
+      - MYSQL_DB_NAME=rategame
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
