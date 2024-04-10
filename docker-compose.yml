@@ -21,7 +21,10 @@ services:
     environment:
       - DATA_BASE_PASSWORD=example
       - DATA_BASE_USERNAME=root
-      - SMTP_PASSWORD="iltc gsff asqa tjhv"
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PASSWORD="ahif cajf rwif sbcs"
+      - SMTP_PORT=587
+      - SMTP_USERNAME=rategamegame@gmail.com
       - TWITCHID=6idsg519ob3dp93vzqhbgdxfjug2rg
       - TWITCHSECRET=kf4pqs47efckszl3ddn1smhh8tbp66
       - LIMIT_GAME_IMPORT_TESTING=TRUE
