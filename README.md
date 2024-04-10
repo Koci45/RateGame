@@ -46,6 +46,9 @@ Other: <br>
   - DATA_BASE_PASSWORD -> gives the password to database to the main app
   - DATA_BASE_USERNAME -> gives the username to database to the main app
   - SMTP_PASSWORD -> secret key to smtp server
+  - SMTP_HOST -> smtp host
+  - SMTP_PORT -> smtp port
+  - SMTP_USERNAME -> smtp username
   - TWITCHID -> twitch id
   - TWITCHSECRET -> twitch secret key
   - LIMIT_GAME_IMPORT_TESTING -> if "TRUE" will limit the import of games to 500/hour, otherwise it will download all 270,000 at once which can take up few minutes
@@ -53,6 +56,6 @@ Other: <br>
   - MYSQL_PORT -> port of mysql service
   - MYSQL_DB_NAME -> name of the database
 
-To configure the application you can change these enviroment variables in docker-compose.yml. For testing purposes i reccomend leaving the 'LIMIT_GAME_IMPORT_TESTING' variable to true. In the compose file all of these are already filled up with default values. For the simplicity of testing i left ZROB ZMIENNE DLA EMAIL TEZ!!!
+To configure the application you can change these enviroment variables in docker-compose.yml. For testing purposes i reccomend leaving the 'LIMIT_GAME_IMPORT_TESTING' variable to 'TRUE'. In the compose file all of these are already filled up with default values. For the simplicity of testing i created dummy accounts for twitch and gmail smtp and left the credentials in the file so you don't have to create accounts. Hovewer in the case they stop working in the future (which is possible since they are free tier accounts, or something bad happens to them) you can fill them up with your own credientials
 
 
