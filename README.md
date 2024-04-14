@@ -1,8 +1,8 @@
 # RateGame
 RateGame is a backend application that allows it's users to browse and review over 270,000 games!
-The game database is updated every hour making sure that the user will have every game they could imagine.
+The game database is updated every hour making sure that the user will have acces to every game they can imagine.
 Users can review and rate games, they can like other users reviews, browse reviews for every game and sort them by the amount of likes they got.
-In case a user finds a review vulgar or Inappropriate they can report them. Application admin can print a raport of all reported reviews sorted by report amount and decide what to do with them and the authour.
+In case a user finds a review vulgar or inappropriate they can report them. Application admin can print a raport of all reported reviews sorted by report amount and decide what to do with them and the author.
 
  
 
