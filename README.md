@@ -58,6 +58,7 @@ Other: <br>
 
 To configure the application you can change these enviroment variables in docker-compose.yml. For testing purposes i reccomend leaving the 'LIMIT_GAME_IMPORT_TESTING' variable to 'TRUE'. In the compose file all of these are already filled up with default values. For the simplicity of testing i created dummy accounts for twitch and gmail smtp and left the credentials in the file so you don't have to create accounts. Hovewer in the case they stop working in the future (which is possible since they are free tier accounts, or something bad happens to them) you can fill them up with your own credientials
 
+
 ### Run the application
 While in the project folder run the following command:
 
@@ -65,6 +66,17 @@ While in the project folder run the following command:
 docker-compose up
 ```
 Then wait for the images to be downloaded. By default the application runs on port 8070
+
+
+### Adding admin account
+To add admin account run the following sql script in your database
+
+```
+USE DatabaseName;
+
+INSERT INTO user (username, email, password, role, is_enabled) 
+VALUES ('Admin', 'Admin@domain', 'example', 'ADMIN', true);
+```
 
 
 ## Endpoints
