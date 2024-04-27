@@ -133,7 +133,7 @@ public class ReviewControllerTests {
         when(reviewService.findByUserId(1L)).thenReturn(reviews);
         when(reviewToReviewResponseTranslatorProvider.translate(reviews)).thenReturn(reviewResponses);
 
-        mockMvc.perform(get("/reviews/findByUserId/{id}", 1L))
+        mockMvc.perform(get("/reviews/ByUserId/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(reviewResponses)));
     }
@@ -157,7 +157,7 @@ public class ReviewControllerTests {
         when(reviewService.findByGameId(1)).thenReturn(reviews);
         when(reviewToReviewResponseTranslatorProvider.translate(reviews)).thenReturn(reviewResponses);
 
-        mockMvc.perform(get("/reviews/findByGameId/{id}", 1))
+        mockMvc.perform(get("/reviews/ByGameId/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(reviewResponses)));
     }
@@ -171,7 +171,7 @@ public class ReviewControllerTests {
         when(reviewService.findByUserIdAndGameId(1L, 1)).thenReturn(reviewOne);
         when(reviewToReviewResponseTranslatorProvider.translate(reviewOne)).thenReturn(reviewResponse);
 
-        mockMvc.perform(get("/reviews/findByUserIdAndGameId/{userId}/{gameId}", 1L, 1))
+        mockMvc.perform(get("/reviews/ByUserIdAndGameId/{userId}/{gameId}", 1L, 1))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(reviewResponse)));
     }
@@ -215,7 +215,7 @@ public class ReviewControllerTests {
         when(reviewToReviewResponseTranslatorProvider.translate(reviews)).thenReturn(reviewResponses);
         when(reviewService.findTopLikedReviewsByGameId(1, PageRequest.of(0, 10))).thenReturn(reviews);
 
-        mockMvc.perform(get("/reviews/findByGameIdAndOrderByLikes/{gameId}/{pageNumber}", 1, 0))
+        mockMvc.perform(get("/reviews/ByGameIdAndOrderByLikes/{gameId}/{pageNumber}", 1, 0))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(reviewResponses)));
     }

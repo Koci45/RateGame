@@ -46,7 +46,7 @@ public class ReviewController {
         return service.remove(id);
     }
 
-    @GetMapping("/findByUserId/{id}")
+    @GetMapping("/ByUserId/{id}")
     public List<ReviewResponse> findByUserId(@PathVariable Long id){
         List<Review> reviews = service.findByUserId(id);
         //Creating separate objects for response to avoid sending critical user information that is stored inside normal review object
@@ -54,7 +54,7 @@ public class ReviewController {
         return translator.translate(reviews);
     }
 
-    @GetMapping("/findByGameId/{id}")
+    @GetMapping("/ByGameId/{id}")
     public List<ReviewResponse> findByGameId(@PathVariable int id){
         List<Review> reviews = service.findByGameId(id);
         //Creating separate objects for response to avoid sending critical user information that is stored inside normal review object
@@ -62,7 +62,7 @@ public class ReviewController {
         return translator.translate(reviews);
     }
 
-    @GetMapping("/findByUserIdAndGameId/{userId}/{gameId}")
+    @GetMapping("/ByUserIdAndGameId/{userId}/{gameId}")
     public ReviewResponse findByUserIdAndGameId(@PathVariable Long userId, @PathVariable int gameId){
 
         //Creating separate objects for response to avoid sending critical user information that is stored inside normal review object
@@ -76,7 +76,7 @@ public class ReviewController {
         return calculator.calculateAverageRating(reviews);
     }
 
-    @GetMapping("/findByGameIdAndOrderByLikes/{gameId}/{pageNumber}")
+    @GetMapping("/ByGameIdAndOrderByLikes/{gameId}/{pageNumber}")
     public List<ReviewResponse> findByGameIdAndOrderByLikes(@PathVariable int gameId, @PathVariable int pageNumber){
         List<Review> reviews = service.findTopLikedReviewsByGameId(gameId, PageRequest.of(pageNumber, 10));
 
