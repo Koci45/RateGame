@@ -2,6 +2,7 @@ package com.KociApp.RateGame.game;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +34,18 @@ public class GameService implements IGamesService{
         return repository.save(game);
     }
 
+    @Override
     public List<Game> getGames() {
         return repository.findAll();
+    }
+
+    @Override
+    public List<Game> getGamesInPages(PageRequest pageRequest){
+        return repository.findAll(pageRequest).stream().toList();
+    }
+
+    @Override
+    public List<Game> findAllByTitleLikeInPages(String keyWord, PageRequest pageRequest) {
+        return repository.findByTitleContaining(keyWord, pageRequest).stream().toList();
     }
 }
